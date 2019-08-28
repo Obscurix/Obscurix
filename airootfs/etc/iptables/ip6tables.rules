@@ -4,13 +4,11 @@
 :OUTPUT ACCEPT [17:6239]
 :POSTROUTING ACCEPT [6:408]
 
--A PREROUTING ! -i lo -p udp -m udp --dport 53 -j REDIRECT --to-ports 5353
--A PREROUTING ! -i lo -p tcp -m tcp --tcp-flags FIN,SYN,RST,ACK SYN -j REDIRECT --to-ports 9040
 -A OUTPUT -o lo -j RETURN
 --ipv4 -A OUTPUT -d 192.168.0.0/16 -j RETURN
 -A OUTPUT -m owner --uid-owner "tor" -j RETURN
 -A OUTPUT -p udp -m udp --dport 53 -j REDIRECT --to-ports 5353
--A OUTPUT -p tcp -m tcp --tcp-flags FIN,SYN,RST,ACK SYN -j REDIRECT --to-ports 9040
+-A OUTPUT -p tcp -m tcp --tcp-flags FIN,SYN,RST,ACK SYN -m owner ! --uid-owner "i2p" -j REDIRECT --to-ports 9040
 COMMIT
 
 *filter
@@ -30,6 +28,8 @@ COMMIT
 --ipv6 -A OUTPUT -d ::1/8 -j ACCEPT
 -A OUTPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 -A OUTPUT -m owner --uid-owner "tor" -j ACCEPT
+-A OUTPUT -m owner --uid-owner "i2p" -j ACCEPT
+-A OUTPUT -m owner --uid-owner "freenet" -j ACCEPT
 --ipv4 -A OUTPUT -j REJECT --reject-with icmp-port-unreachable
 --ipv6 -A OUTPUT -j REJECT
 COMMIT

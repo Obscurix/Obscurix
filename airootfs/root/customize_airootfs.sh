@@ -22,7 +22,7 @@ systemctl enable pacman-init.service # choose-mirror.service
 systemctl set-default graphical.target
 
 # Configure Pacman mirrors.
-curl https://www.archlinux.org/mirrorlist/?country=all&protocol=https&ip_version=4 > /etc/pacman.d/mirrorlist
+curl "https://www.archlinux.org/mirrorlist/?country=all&protocol=https&ip_version=4" > /etc/pacman.d/mirrorlist
 sed -i 's/#Server/Server/g' /etc/pacman.d/mirrorlist
 
 # Create new user.
