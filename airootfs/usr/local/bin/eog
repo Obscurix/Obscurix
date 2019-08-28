@@ -1,0 +1,26 @@
+#!/bin/bash
+
+bwrap \
+--ro-bind /usr/bin/eog /usr/bin/eog \
+--ro-bind /usr/share /usr/share \
+--ro-bind /usr/lib /usr/lib \
+--ro-bind /etc/gtk-2.0 /etc/gtk-2.0 \
+--ro-bind /etc/gtk-3.0 /etc/gtk-3.0 \
+--ro-bind /etc/fonts /etc/fonts \
+--bind /run/user/1000 /run/user/1000 \
+--bind /home/user /home/user \
+--symlink /usr/bin /bin \
+--symlink /usr/bin /sbin \
+--symlink /usr/lib /lib \
+--symlink /usr/lib /lib64 \
+--unshare-pid \
+--proc /proc \
+--unshare-cgroup \
+--unshare-uts \
+--cap-drop all \
+--new-session \
+--setenv SHELL /bin/false \
+--setenv LD_PRELOAD /usr/lib/libhardened_malloc.so \
+--tmpfs /tmp/ \
+--dev /dev/ \
+/usr/bin/eog

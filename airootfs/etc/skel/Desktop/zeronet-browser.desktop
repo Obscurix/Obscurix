@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Zeronet Browser
+GenericName=Web Browser
+Comment=Zeronet Browser is +1 for privacy and -1 for mass surveillance
+Categories=Network;WebBrowser;Security;
+Exec=/usr/bin/zeronetbrowser
+Icon=/home/user/.icons/zeronet.png
+StartupWMClass=Tor Browser

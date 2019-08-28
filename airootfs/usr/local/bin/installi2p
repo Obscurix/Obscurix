@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Allow the i2p user to access the X server.
+# This is needed for the GUI installer.
+xhost +SI:localuser:i2p >/dev/null
+
+# Run the I2P installation script.
+sudo sudo -u i2p /usr/bin/installi2p
+
+# Don't allow the i2p user to access the X server as it's no longer needed.
+xhost -SI:localuser:i2p >/dev/null
+
+# Force all outgoing traffic through I2P.
+sudo /usr/lib/obscurix/plug-firewall-i2p

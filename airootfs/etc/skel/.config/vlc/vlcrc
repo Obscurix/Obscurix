@@ -1,0 +1,2 @@
+# Disable metadata collection by default.
+qt-privacy-ask=0

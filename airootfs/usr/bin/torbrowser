@@ -1,0 +1,21 @@
+#!/bin/bash
+
+bwrap \
+--bind /home/user /home/user \
+--ro-bind /usr/bin /usr/bin \
+--ro-bind /usr/lib /usr/lib \
+--ro-bind /usr/share /usr/share \
+--symlink /usr/bin /bin \
+--symlink /usr/bin /sbin \
+--symlink /usr/lib /lib \
+--symlink /usr/lib /lib64 \
+--unshare-pid \
+--proc /proc \
+--unshare-cgroup \
+--unshare-uts \
+--cap-drop all \
+--new-session \
+--setenv SHELL /bin/false \
+--tmpfs /tmp/ \
+--dev /dev/ \
+/home/user/tor-browser_en-US/Browser/start-tor-browser

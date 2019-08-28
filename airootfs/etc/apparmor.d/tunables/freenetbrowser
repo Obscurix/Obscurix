@@ -1,0 +1,2 @@
+@{freenetbrowser_installation_dir}=@{HOME}/freenet-browser
+@{freenetbrowser_home_dir}=@{freenetbrowser_installation_dir}/Browser

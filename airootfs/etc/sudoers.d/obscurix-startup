@@ -1,0 +1,1 @@
+user ALL=NOPASSWD: /usr/lib/obscurix/obscurix-startup

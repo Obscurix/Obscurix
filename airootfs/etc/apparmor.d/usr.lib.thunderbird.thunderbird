@@ -1,0 +1,425 @@
+# vim:syntax=apparmor
+# Author: Simon Deziel <simon.deziel at gmail_com>
+# This apparmor profile is derived from firefox profile
+# by Jamie Strandboge <jamie@canonical.com>
+
+# Original: https://git.launchpad.net/apparmor-profiles/tree/ubuntu/19.10/usr.bin.thunderbird
+
+# Declare an apparmor variable to help with overrides
+@{MOZ_LIBDIR}=/usr/lib/thunderbird
+
+#include <tunables/global>
+
+profile thunderbird /usr/lib/thunderbird/thunderbird{,-bin} {
+  #include <abstractions/audio>
+  #include <abstractions/aspell>
+  #include <abstractions/cups-client>
+  # TODO: finetune this for required accesses
+  #include <abstractions/dbus>
+  #include <abstractions/dbus-accessibility>
+  #include <abstractions/dbus-session>
+  #include <abstractions/dconf>
+  #include <abstractions/gnome>
+  #include <abstractions/ibus>
+  #include <abstractions/nameservice>
+  #include <abstractions/nvidia>
+  #include <abstractions/p11-kit>
+  #include <abstractions/private-files>
+  #include <abstractions/ssl_certs>
+  #include <abstractions/ubuntu-browsers>
+  #include <abstractions/ubuntu-browsers.d/java>
+  #include <abstractions/ubuntu-helpers>
+
+  # Backported from the mesa abstraction, available in AppArmor >2.13
+  # System files
+  /dev/dri/ r, # libGLX_mesa.so calls drmGetDevice2()
+
+  # User files
+  owner @{HOME}/.cache/ w, # if user clears all caches
+  owner @{HOME}/.cache/mesa_shader_cache/ w,
+  owner @{HOME}/.cache/mesa_shader_cache/index rw,
+  owner @{HOME}/.cache/mesa_shader_cache/??/ w,
+  owner @{HOME}/.cache/mesa_shader_cache/??/* rw,
+  # End of backported mesa abstraction
+
+  # Backported from the dri-enumerate abstraction, available in AppArmor 2.13
+  /sys/devices/pci[0-9]*/**/{device,subsystem_device,subsystem_vendor,uevent,vendor} r,
+
+  # Allow opening attachments
+  # TODO: create and use abstractions for opening various file formats
+  /{usr/local/,usr/,}bin/* Cx -> sanitized_helper,
+  /usr/lib/libreoffice/program/soffice Cxr -> sanitized_helper,
+
+  # Allow opening links
+  /usr/lib/@{multiarch}/glib-[0-9]*/gio-launch-desktop ix,
+
+  # For Xubuntu to launch the browser
+  /usr/bin/exo-open ixr,
+  /usr/lib/@{multiarch}/xfce4/exo-1/exo-helper-1 ixr,
+  /etc/xdg/xdg-xubuntu/xfce4/helpers.rc r,
+  /etc/xdg/xfce4/helpers.rc r,
+
+  # for crash reports?
+  ptrace (read,trace) peer=@{profile_name},
+
+  /usr/lib/thunderbird/thunderbird{,-bin} ixr,
+
+  # Pulseaudio
+  /usr/bin/pulseaudio Pixr,
+
+  owner @{HOME}/.{cache,config}/dconf/user rw,
+  owner @{HOME}/.cache/thumbnails/** r,
+  owner /run/user/[0-9]*/dconf/user rw,
+  owner @{HOME}/.config/gtk-3.0/bookmarks r,
+  deny owner @{HOME}/.local/share/gvfs-metadata/* r,
+
+  # potentially extremely sensitive files
+  audit deny @{HOME}/.gnupg/** mrwkl,
+  audit deny @{HOME}/.ssh/** mrwkl,
+
+  # rw access to HOME is useful when sending/receiving attachments
+  owner @{HOME}/[^.]** rw,
+
+  # other commonly used locations
+  /{data,media,mnt,srv}/** r,
+  owner /{data,media,mnt,srv}/** rw,
+  owner @{HOME}/.signature* r,
+
+  # Required for LVM setups
+  /sys/devices/virtual/block/dm-[0-9]*/uevent r,
+
+  # Addons (too lax for thunderbird)
+  ##include <abstractions/ubuntu-browsers.d/firefox>
+
+  # for networking
+  network inet stream,
+  network inet6 stream,
+  @{PROC}/[0-9]*/net/if_inet6 r,
+  @{PROC}/[0-9]*/net/ipv6_route r,
+  @{PROC}/[0-9]*/net/dev r,
+  @{PROC}/[0-9]*/net/wireless r,
+  @{PROC}/[0-9]*/net/arp r,
+
+  # should maybe be in abstractions
+  /etc/ r,
+  /etc/mime.types r,
+  /etc/mailcap r,
+  /etc/xdg/*buntu/applications/defaults.list    r, # for all derivatives
+  /etc/xfce4/defaults.list r,
+  /usr/share/xubuntu/applications/defaults.list r,
+  owner /dev/shm/org.chromium.* rw, # for Chromium IPC
+  owner @{HOME}/.cache/fontconfig/*.cache-* rwk,
+  owner @{HOME}/.local/share/applications/defaults.list r,
+  owner @{HOME}/.local/share/applications/mimeapps.list r,
+  owner @{HOME}/.local/share/applications/mimeinfo.cache r,
+  owner @{HOME}/.recently-used r,
+  /tmp/.X[0-9]*-lock r,
+  /etc/udev/udev.conf r,
+  # Doesn't seem to be required, but noisy. Maybe allow 'r' for 'b*' if needed.
+  # Possibly move to an abstraction if anything else needs it.
+  deny /run/udev/data/** r,
+
+  /etc/timezone r,
+  /etc/wildmidi/wildmidi.cfg r,
+
+  # thunderbird specific
+  /etc/thunderbird/ r,
+  /etc/thunderbird/** r,
+  /etc/xul-ext/** r,
+  /etc/xulrunner-2.0*/ r,
+  /etc/xulrunner-2.0*/** r,
+  /etc/gre.d/ r,
+  /etc/gre.d/* r,
+
+  # noisy
+  deny @{MOZ_LIBDIR}/** w,
+  deny /usr/lib/thunderbird-addons/** w,
+  deny /usr/lib/xulrunner-addons/** w,
+  deny /usr/lib/xulrunner-*/components/*.tmp w,
+  deny /.suspended r,
+  deny /boot/initrd.img* r,
+  deny /boot/vmlinuz* r,
+  deny /var/cache/fontconfig/ w,
+
+  # noisy file dialog:
+  #
+  # TODO: remove these rules when file dialogs becomes "trusted helpers" that can
+  # read anything, or ability to override `deny` rules is implemented [0].
+  #
+  # NOTE: modify `local/usr.bin.thunderbird` to add `deny` rules for cases not
+  # mentioned here when `DENIED` messages appear for dot files in kernel (or audit)
+  # logs. If that case is believed to be common enough, please report bug against
+  # package shipping this profile in order to extend this list.
+  #
+  # [0] https://bugs.launchpad.net/ubuntu/+source/apparmor/+bug/451422
+  deny @{HOME}/.KiCad r,
+  deny @{HOME}/.abbrev_defs r,
+  deny @{HOME}/.aspell.*.{prepl,pws} r,
+  deny @{HOME}/.bashrc r,
+  deny @{HOME}/.bash_logout r,
+  deny @{HOME}/.bbdb r,
+  deny @{HOME}/.caffrc r,
+  deny @{HOME}/.colordiffrc r,
+  deny @{HOME}/.cvpcb r,
+  deny @{HOME}/.cvspass r,
+  deny @{HOME}/.devscripts r,
+  deny @{HOME}/.directory r,
+  deny @{HOME}/.dpt.conf r,
+  deny @{HOME}/.dput.cf r,
+  deny @{HOME}/.dupload.conf r,
+  deny @{HOME}/.eeschema r,
+  deny @{HOME}/.emacs r,
+  deny @{HOME}/.emacs.bmk r,
+  deny @{HOME}/.emacs.desktop* r,
+  deny @{HOME}/.fehbg r,
+  deny @{HOME}/.forward r,
+  deny @{HOME}/.gbp.conf r,
+  deny @{HOME}/.gerbview r,
+  deny @{HOME}/.gitconfig r,
+  deny @{HOME}/.gitk r,
+  deny @{HOME}/.gtk-recordmydesktop r,
+  deny @{HOME}/.gtkrc-2.0 r,
+  deny @{HOME}/.i18n r,
+  deny @{HOME}/.ido.last r,
+  deny @{HOME}/.iftoprc r,
+  deny @{HOME}/.inputrc r,
+  deny @{HOME}/.jigdo-lite r,
+  deny @{HOME}/.kicad r,
+  deny @{HOME}/.kicad_common r,
+  deny @{HOME}/.lesshst r,
+  deny @{HOME}/.listadmin.ini r,
+  deny @{HOME}/.minicpanrc r,
+  deny @{HOME}/.mostrc r,
+  deny @{HOME}/.mrconfig r,
+  deny @{HOME}/.mrlog r,
+  deny @{HOME}/.mrtrust r,
+  deny @{HOME}/.my.cnf r,
+  deny @{HOME}/.newsrc-dribble r,
+  deny @{HOME}/.newsrc.eld r,
+  deny @{HOME}/.notmuch-config r,
+  deny @{HOME}/.offlineimaprc r,
+  deny @{HOME}/.pam_environment r,
+  deny @{HOME}/.pbuilderrc r,
+  deny @{HOME}/.pcbnew r,
+  deny @{HOME}/.perldb r,
+  deny @{HOME}/.perltidyrc r,
+  deny @{HOME}/.pgadmin3 r,
+  deny @{HOME}/.pgadmin_histoqueries r,
+  deny @{HOME}/.pgpass r,
+  deny @{HOME}/.python_history r,
+  deny @{HOME}/.pythonhist r,
+  deny @{HOME}/.quiltrc r,
+  deny @{HOME}/.reportbug-ng r,
+  deny @{HOME}/.reportbugrc r,
+  deny @{HOME}/.rnd r,
+  deny @{HOME}/.screenrc r,
+  deny @{HOME}/.selected_editor r,
+  deny @{HOME}/.steam/bin{32,64}/steam r, # through a symlink
+  deny @{HOME}/.steam/steam.pid r, # through a symlink
+  deny @{HOME}/.steam/ubuntu12_{32,64}/steam r, # through a symlink
+  deny @{HOME}/.sudo_as_admin_successful r,
+  deny @{HOME}/.swp r,
+  deny @{HOME}/.taskrc r,
+  deny @{HOME}/.tmux.conf r,
+  deny @{HOME}/.vboxclient-*.pid r,
+  deny @{HOME}/.vimrc r,
+  deny @{HOME}/.wget-hsts r,
+  deny @{HOME}/.xchm r,
+  deny @{HOME}/.xfce4-session.verbose-log* r,
+  deny @{HOME}/.xim.template r,
+  deny @{HOME}/.xinitrc.template r,
+  deny @{HOME}/.xinputrc r,
+  deny @{HOME}/.xscreensaver r,
+  deny @{HOME}/.xsession*errors* r,
+  deny @{HOME}/.xsessionrc r,
+  deny @{HOME}/.Xresources r,
+  deny @{HOME}/.Xsession r,
+  deny @{HOME}/.zcompdump r,
+  deny @{HOME}/.zlogout r,
+  deny @{HOME}/.zshrc r,
+
+  # TODO: investigate
+  deny /usr/bin/gconftool-2 x,
+
+  # Deny proprietary NVIDIA driver optimizations
+  # TODO: remove once it can be disabled via conditionals set up in nvidia abstraction
+  deny /tmp/#[0-9][0-9][0-9][0-9][0-9][0-9][0-9] m,
+  deny /tmp/.gl?????? mrw,
+  deny @{HOME}/#[0-9][0-9][0-9][0-9][0-9][0-9][0-9]{,[0-9]} m,
+  deny @{HOME}/.nv/.gl?????? mrw,
+
+  owner @{PROC}/[0-9]*/mountinfo r,
+  owner @{PROC}/[0-9]*/stat r,
+  owner @{PROC}/[0-9]*/task/[0-9]*/stat r,
+  /sys/devices/pci[0-9]*/**/uevent r,
+  /sys/devices/pci*/**/config r,
+  /sys/devices/system/node/node[0-9]*/meminfo r,
+  /etc/mtab r,
+  /etc/fstab r,
+
+  # Needed for the crash reporter
+  owner @{PROC}/[0-9]*/environ r,
+  owner @{PROC}/[0-9]*/auxv r,
+  owner @{PROC}/[0-9]*/status r,
+  owner @{PROC}/[0-9]*/cmdline r,
+  /etc/lsb-release r,
+  /etc/ssl/openssl.cnf r,
+  /usr/lib/thunderbird/crashreporter ix,
+  /usr/bin/expr ix,
+  /sys/devices/system/cpu/ r,
+  /sys/devices/system/cpu/** r,
+
+  # about:memory
+  owner @{PROC}/[0-9]*/statm r,
+  owner @{PROC}/[0-9]*/smaps r,
+
+  # Needed for container to work in xul builds
+  /usr/lib/xulrunner-*/plugin-container ixr,
+
+  # allow access to documentation and other files the user may want to look
+  # at in /usr and /opt
+  /usr/ r,
+  /usr/** r,
+  /opt/ r,
+  /opt/** r,
+
+  # so browsing directories works
+  / r,
+  /**/ r,
+
+  # per-user thunderbird configuration
+  owner @{HOME}/.{icedove,thunderbird}/ rw,
+  owner @{HOME}/.{icedove,thunderbird}/** rw,
+  owner @{HOME}/.{icedove,thunderbird}/**/storage.sdb k,
+  owner @{HOME}/.{icedove,thunderbird}/**/*.{db,parentlock,sqlite}* k,
+  owner @{HOME}/.{icedove,thunderbird}/plugins/** rm,
+  owner @{HOME}/.{icedove,thunderbird}/**/plugins/** rm,
+  owner @{HOME}/.cache/thunderbird/ rw,
+  owner @{HOME}/.cache/thunderbird/** rw,
+
+  # system emails
+  owner /var/mail/* rwlk,
+
+  #
+  # Extensions
+  # /usr/share/.../extensions/... is already covered by '/usr/** r', above.
+  # Allow 'x' for downloaded extensions, but inherit policy for safety
+  owner @{HOME}/.{icedove,thunderbird}/**/extensions/** mixrw,
+  owner @{HOME}/.mozilla/ rw,
+  owner @{HOME}/.mozilla/extensions/          rw,
+  owner @{HOME}/.mozilla/extensions/**        mixr,
+  /usr/share/xul-ext/**/*.sqlite              rk,
+  /usr/lib/mozilla/plugins/*.so               rm,
+  /usr/lib/xul-ext/**/*.sqlite                rk,
+  /usr/lib/thunderbird-addons/extensions/**/*.sqlite rk,
+
+  deny @{MOZ_LIBDIR}/update.test w,
+  deny /usr/lib/mozilla/extensions/**/ w,
+  deny /usr/lib/xulrunner-addons/extensions/**/ w,
+  deny /usr/share/mozilla/extensions/**/ w,
+  deny /usr/share/mozilla/ w,
+
+  /usr/bin/gpg               Cx -> gpg,
+  /usr/bin/gpg2              Cx -> gpg,
+  /usr/bin/gpgconf           Cx -> gpg,
+  /usr/bin/gpg-connect-agent Cx -> gpg,
+  /usr/lib/gnupg/gpg-wks-client ix,
+  /{,usr/}bin/ps                   ix,
+
+  # TB tries to create this file but has no business doing so
+  deny @{HOME}/.gnupg/gpg-agent.conf w,
+
+  profile gpg {
+    #include <abstractions/base>
+
+    # Required to import keys from keyservers
+    #include <abstractions/nameservice>
+    #include <abstractions/p11-kit>
+
+    /usr/share/xul-ext/enigmail/chrome/** r,
+
+    # silence noise from enigmail 1.9+
+    deny owner @{HOME}/.{icedove,thunderbird}/*/.parentlock w,
+    deny owner @{HOME}/.{icedove,thunderbird}/*/panacea.dat w,
+    deny owner @{HOME}/.{icedove,thunderbird}/*/*.mab w,
+    deny owner @{HOME}/.{icedove,thunderbird}/**/*.msf w,
+    deny owner @{HOME}/.cache/thunderbird/**/_CACHE_* w,
+
+    # noise from inherited files
+    deny @{HOME}/.{icedove,thunderbird}/*/ImapMail/*/INBOX w,
+    deny /usr/{lib,share}/thunderbird/omni.ja r,
+    deny /usr/share/thunderbird/extensions/** r,
+
+    # For smartcards?
+    /dev/bus/usb/ r,
+    /dev/bus/usb/[0-9]*/ r,
+    /dev/bus/usb/[0-9]*/[0-9]* r,
+
+    # LDAP key servers
+    /etc/ldap/ldap.conf r,
+
+    /usr/bin/gpg mr,
+    /usr/bin/gpg2 mr,
+    /usr/bin/gpgconf mr,
+    /usr/bin/gpg-connect-agent mr,
+    /usr/lib/gnupg/gpgkeys_* ix,
+    /usr/lib/gnupg2/gpg2keys_* ix,
+    owner @{HOME}/.gnupg/ rw,
+    owner @{HOME}/.gnupg/gpg.conf r,
+    owner @{HOME}/.gnupg/random_seed rwk,
+    owner @{HOME}/.gnupg/pubring.{gpg,kbx}{,~} rw,
+    owner @{HOME}/.gnupg/secring.gpg rw,
+    owner @{HOME}/.gnupg/trustdb.gpg rw,
+    owner @{HOME}/.gnupg/tofu.db{,-journal} rwk,
+    owner @{HOME}/.gnupg/S.gpg-agent rw,
+    owner @{HOME}/.gnupg/S.dirmngr rw,
+    owner @{HOME}/.gnupg/*.{gpg,kbx}.{lock,tmp} rwl,
+    owner @{HOME}/.gnupg/.gpg-*.lock rwl,
+    owner @{HOME}/.gnupg/gnupg_spawn_*.lock rwl,
+    owner @{HOME}/.gnupg/.#*[0-9]  rw,
+    owner @{HOME}/.gnupg/.#*[0-9]x rwl,
+    owner @{HOME}/.gnupg/.#lk0x[0-9a-f]* rwl,
+    owner @{HOME}/.gnupg/.gpg-v[0-9]*-migrated rw,
+    owner @{HOME}/.gnupg/openpgp-revocs.d/{,[A-F0-9]*.rev} rw,
+    owner @{HOME}/** r,
+    owner @{PROC}/@{pids}/mountinfo r,
+
+    # For gpgconf
+    owner @{PROC}/@{pids}/fd/ r,
+
+    owner /run/user/[0-9]*/keyring-*/gpg rw,
+
+    # For encryption + signature
+    owner /tmp/gpgOutput.* rw,
+
+    # for inline pgp
+    owner /tmp/encfile rw,
+    owner /tmp/encfile-[0-9]* rw,
+
+    # for key import
+    owner /tmp/enigmail_import/.#lk0x[0-9a-f]*  rw,
+    owner /tmp/enigmail_import/.#lk0x[0-9a-f]*x rwl,
+    owner /tmp/enigmail_import/{keyring,trustdb}.lock rwl,
+    owner /tmp/enigmail_import/{keyring,trustdb}{,~,.tmp} rw,
+    /usr/bin/dirmngr ix,
+    owner @{PROC}/@{pids}/task/@{tid}/comm rw,
+
+    # for revocation certificate generation in the Enigmail setup wizard
+    owner @{HOME}/.{icedove,thunderbird}/*/0x[A-F0-9]*_rev.asc rw,
+    # for revocation certificate generation in the Enigmail key manager
+    owner @{HOME}/*0x[A-F0-9]**.asc rw,
+
+    # for signature generation
+    owner /tmp/nsemail.eml w,
+    owner /tmp/nsemail-[0-9]*.eml w,
+
+    # for signature verifications
+    owner /tmp/data.sig r,
+    owner /tmp/data-[0-9]*.sig r,
+
+    owner /tmp/gpg-[a-zA-Z0-9]*/S.gpg-agent rw,
+
+    /usr/share/sounds/** r,
+  }
+}
+

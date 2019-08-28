@@ -1,0 +1,24 @@
+#include <tunables/global>
+
+/usr/bin/hexchat {
+  #include <abstractions/gnome>
+  #include <abstractions/openssl>
+  #include <abstractions/ubuntu-browsers.d/plugins-common>
+
+  network netlink raw,
+  network tcp, 
+  network udp,
+
+  /etc/resolv.conf r,
+  /etc/host.conf r,
+  /etc/nsswitch.conf r,
+  /etc/passwd r,
+
+  /etc/ca-certificates/extracted/tls-ca-bundle.pem r,
+  /usr/bin/hexchat mr,
+
+  owner @{HOME}/.config/hexchat/ rw,
+  owner @{HOME}/.config/hexchat/** rw,
+  owner @{HOME}/.config/hexchat/logs/** rw,
+
+}

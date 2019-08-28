@@ -1,0 +1,99 @@
+# Last Modified: Sun Aug 25 18:07:16 2019
+#include <tunables/global>
+
+/usr/bin/vlc flags=(attach_disconnected) {
+  #include <abstractions/audio>
+  #include <abstractions/base>
+  #include <abstractions/gnome>
+
+  deny /etc/nsswitch.conf r,
+  deny /etc/passwd r,
+
+  /persistent_ARCH_*/x86_64/upperdir/usr/share/fonts/ r,
+  /persistent_ARCH_*/x86_64/upperdir/usr/share/fonts/** r,
+  /persistent_ARCH_*/x86_64/upperdir/home r,
+  owner /persistent_ARCH_*/x86_64/upperdir/home/user r,
+
+  /etc/group r,
+  
+  /etc/libva.conf r,
+  /etc/vdpau_wrapper.cfg r,
+
+  /usr/share/glvnd/egl_vendor.d/ r,
+  /usr/share/glvnd/egl_vendor.d/50_mesa.json r,
+
+  /dev/snd r,
+  /dev/snd/** r,
+
+  /home r,  
+  /home/** r,
+  @{HOME} r,
+  @{HOME}/* r,
+
+  /dev/ r,
+  /dev/tty r,
+  /etc/fstab r,
+
+  /etc/machine-id r,
+  /proc/sys/kernel/random/boot_id r,
+
+  /sys/devices/pci0000:00/0000:00:01.0/drm/ r,
+  
+  /sys/devices/pci0000:00/*/device r,
+  /sys/devices/pci0000:00/*/subsystem_device r,
+  /sys/devices/pci0000:00/*/subsystem_vendor r,
+  /sys/devices/pci0000:00/*/uevent r,
+  /sys/devices/pci0000:00/*/vendor r,
+  /sys/devices/pci0000:00/*/drm r,  
+
+  /usr/bin/vlc mr,
+  /usr/share/gtk-3.0/settings.ini r,
+  
+  /usr/share/icons/ r,
+  /usr/share/icons/** r,
+
+  /usr/share/libdrm/amdgpu.ids r,
+  /usr/share/mime/mime.cache r,
+  /usr/share/pixmaps/ r,
+  
+  owner @{HOME} r,
+  owner @{HOME}/.cache/fontconfig/* r,
+
+  owner @{HOME}/.cache/mesa_shader_cache/index rw,
+ 
+  owner @{HOME}/.config/#3410629 rw,
+  owner @{HOME}/.config/#3410631 rw,
+  
+  owner @{HOME}/.config/QtProject.conf rw,
+  owner @{HOME}/.config/QtProject.conf.lock rwk,
+  owner @{HOME}/.config/QtProject.conf.* rwl,
+  owner @{HOME}/.config/dconf/user r,
+  
+  owner @{HOME}/.config/vlc/vlc-qt-interface.conf r,
+  owner @{HOME}/.config/vlc/vlc-qt-interface.conf.* rlk,
+
+  owner /proc/*/cmdline r,
+  owner /proc/*/mountinfo r,
+  owner /run/user/1000/ICEauthority r,
+  owner /run/user/1000/dconf/user rw,
+  owner /usr/share/fonts/** rw,
+  
+  owner @{HOME}/.Xauthority r,
+  owner @{HOME}/.cache/fontconfig/*.cache-7 r,
+  owner @{HOME}/.cache/mesa_shader_cache/index rw,
+  owner @{HOME}/.config/#3410629 rw,
+
+  owner @{HOME}/.config/QtProject.conf rw,
+  owner @{HOME}/.config/QtProject.conf.lock rwk,
+  owner @{HOME}/.config/QtProject.conf.* rwl,
+
+  owner @{HOME}/.config/dconf/user r,
+  
+  owner @{HOME}/.config/vlc rw,
+  owner @{HOME}/.config/vlc/** rwk,
+  owner @{HOME}/.local/share/vlc/ rw,
+  owner @{HOME}/.local/share/vlc/** rw,
+
+  owner @{HOME}/.local/share/recently-used.xbel r,
+
+}

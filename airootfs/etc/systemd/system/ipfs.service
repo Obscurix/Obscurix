@@ -1,0 +1,29 @@
+[Unit]
+Description=IPFS daemon
+After=network.target
+
+[Service]
+ExecStartPre=/usr/bin/ipfs init
+ExecStart=/usr/bin/ipfs daemon
+Restart=on-failure
+User=user
+Group=user
+ProtectSystem=strict
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+PrivateTmp=true
+PrivateUsers=true
+MemoryDenyWriteExecute=true
+NoNewPrivileges=true
+RestrictRealtime=true
+SystemCallArchitectures=native
+RestrictNamespaces=true
+SystemCallFilter=@system-service
+
+# Not made yet.
+#AppArmorProfile=/etc/apparmor.d/usr.bin.ipfs
+
+
+[Install]
+WantedBy=default.target

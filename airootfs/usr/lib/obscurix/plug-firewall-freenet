@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# The comments in /usr/lib/obscurix/plug-firewall-i2p apply to Freenet too.
+
+iptables -A OUTPUT -t nat -p tcp -m owner --uid-owner "freenet" -j REDIRECT --to-ports 8888

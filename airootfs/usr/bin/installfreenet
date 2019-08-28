@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Check if installer exists.
+if ! [ -f /home/freenet/new_installer_offline.jar ]; then
+  echo "ERROR: THE FREENET INSTALLER HAS NOT BEEN DOWNLOADED"
+  exit 1
+fi
+
+# Check if already installed.
+if [ -d /home/freenet/Freenet ]; then
+  echo "ERROR: FREENET HAS ALREADY BEEN INSTALLED"
+  exit 1
+fi
+
+
+# Import I2P signing key.
+curl https://freenetproject.org/assets/keyring.gpg | gpg --import
+
+# Verify with GPG.
+if ! gpg --status-fd 1 --verify "/home/freenet/new_installer_offline.jar.sig" "/home/freenet/new_installer_offline.jar" &>/dev/null; then
+  echo "ERROR: FREENET INSTALLER CANNOT BE VERIFIED WITH GPG."
+  exit 1
+fi
+
+# Run installer.
+java -jar /home/freenet/new_installer_offline.jar
+
+# Delete installer and signature.
+rm -f /home/freenet/new_installer_offline.jar /home/freenet/new_installer_offline.jar.sig
+
+# Check if I2P has been installed correctly.
+if [ -d /home/freenet/Freenet ]; then
+  echo "FREENET HAS BEEN INSTALLED"
+
+  # Create a statefile so the browser script knows Freenet has been installed.
+  touch /tmp/freenet_installed
+  chmod 644 /tmp/freenet_installed
+else
+  echo "ERROR: FREENET HAS NOT BEEN INSTALLED"
+fi

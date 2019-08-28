@@ -1,0 +1,103 @@
+#!/bin/bash
+
+disable_tor() {
+  systemctl mask --now tor.service iptables.service
+}
+
+disable_network() {
+  # Get list of network interfaces. Excludes loopback and virtual machine interfaces.
+  interfaces=$(ls /sys/class/net | grep -v 'lo' | grep -v 'tun0' | grep -v "virbr")
+
+  # Set them all down.
+  for i in ${interfaces}
+  do
+    ip link set $i down
+  done
+
+  # Disable Tor and NetworkManager. This causes the firewall to block network traffic and no connections can be made with NetworkManager.
+  systemctl mask --now tor.service NetworkManager.service
+  
+  # Configure iptables to block all outgoing traffic.
+  iptables -P OUTPUT DROP
+  iptables -A OUTPUT -j DROP
+}
+
+allow_root() {
+  # Add user to the wheel group.
+  gpasswd -a user wheel
+
+  # Allow users of the wheel group to use sudo.
+  sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
+
+  # Set the user password.
+  echo "user:password" | chpasswd
+}
+
+disable_macspoofing() {
+  # Disable the systemd service used for MAC address spoofing.
+  systemctl mask --now macspoof.service
+}
+
+enable_ipfs() {
+  # Enable IPFS.
+  systemctl unmask ipfs.service
+  systemctl enable --now ipfs.service
+}
+
+enable_cjdns() {
+  # Only run if IPv6 has not been disabled.
+  if ! grep "ipv6.disable=1" /proc/cmdline; then
+    # Enable cjdns.
+    systemctl unmask cjdns.service
+    systemctl enable --now cjdns.service
+
+    # Generate configuration file.
+    cjdroute --genconf > /etc/cjdroute.conf
+    chmod 600 /etc/cjdroute.conf
+    chown cjdns:cjdns /etc/cjdroute.conf
+  else
+    echo "ERROR: IPv6 IS DISABLED."
+  fi
+}
+
+enable_ipv6_firewall() {
+  # Re-enable the IPv6 firewall if IPv6 is not disabled.
+  systemctl enable --now ip6tables.service
+}
+
+disable_zeronet() {
+  # Disable Zeronet to save up some system resources if the user does not want it.
+  systemctl mask --now zeronet.service
+}
+
+if grep "notor" /proc/cmdline; then
+  disable_tor
+fi
+
+if grep "nonet" /proc/cmdline; then
+  disable_network
+fi  
+
+if grep "rootpw" /proc/cmdline; then
+  allow_root
+fi
+
+if grep "nomacspoof" /proc/cmdline; then
+  disable_macspoofing
+fi
+
+if grep "ipfs" /proc/cmdline; then
+  enable_ipfs
+fi
+
+if grep "cjdns" /proc/cmdline; then
+  enable_cjdns
+fi
+
+if ! grep "ipv6.disable=1" /proc/cmdline; then
+  enable_ipv6_firewall
+fi
+
+if grep "nozeronet" /proc/cmdline; then
+  disable_zeronet
+fi

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+bwrap --dev-bind / / \
+--unshare-pid \
+--proc /proc \
+--unshare-cgroup \
+--unshare-uts \
+--unshare-net \
+--cap-drop all \
+--new-session \
+--setenv SHELL /bin/false \
+--tmpfs /tmp/ \
+--dev /dev/ \
+/usr/bin/gedit

@@ -1,0 +1,60 @@
+#include <tunables/global>
+
+/usr/bin/gedit flags=(attach_disconnected) {
+  #include <abstractions/base>
+  #include <abstractions/gnome>
+
+  deny /etc/nsswitch.conf r,
+  deny /etc/passwd r,
+  deny /etc/hosts r,
+  deny /etc/host.conf r,
+  deny /etc/resolv.conf r,
+  deny /persistent_ARCH_*/x86_64/upperdir/usr/share/ r,
+  
+  /persistent_ARCH_*/x86_64/upperdir/usr/share/fonts/ r,
+  /persistent_ARCH_*/x86_64/upperdir/usr/share/fonts/** r,
+  /persistent_ARCH_*/x86_64/upperdir/home/user/ r,
+
+  /var/lib/dbus/machine-id r,
+
+  /etc/fstab r,
+  
+  # GTK stuff.
+  /usr/share/gtk-3.0/settings.ini r,
+  /usr/share/gtksourceview-4/** r,
+  
+  # Give access to all of /usr/share/mime.
+  /usr/share/mime/ r,
+  /usr/share/mime/** r,
+  
+  # Spell checking.
+  /usr/share/hspell/* r,
+  /usr/share/enchant/enchant.ordering r,
+  
+  # Icons.  
+  /usr/share/pixmaps/ r,
+  /usr/share/icons/ r,
+  /usr/share/icons/** r,
+  
+  # ISO codes.
+  /usr/share/xml/iso-codes/*.xml r,
+
+  /usr/bin/gedit mr,
+  
+  # Read and create files in every home directory.
+  owner /home/** rw,
+  
+  # User configuration and cache.
+  owner /home/*/.cache/fontconfig/* r,
+  owner /home/*/.config/dconf/user r,
+  owner /home/*/.config/enchant/ w,
+  owner /home/*/.config/enchant/* rwk,
+
+  owner /home/*/.local/share/recently-used.xbel rw,
+  owner /home/*/.local/share/recently-used.xbel.* rw,
+
+  owner /proc/*/mountinfo r,
+  owner /run/user/1000/dconf/user rw,
+  owner /usr/share/fonts/** rw,
+
+}

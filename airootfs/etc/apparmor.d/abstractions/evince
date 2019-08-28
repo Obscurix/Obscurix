@@ -1,0 +1,97 @@
+# vim:syntax=apparmor
+#
+# abstraction used by evince binaries
+#
+
+  #include <abstractions/gnome>
+  #include <abstractions/p11-kit>
+
+  @{PROC}/[0-9]*/fd/ r,
+  @{PROC}/[0-9]*/mountinfo r,
+  owner @{PROC}/[0-9]*/auxv r,
+  owner @{PROC}/[0-9]*/status r,
+
+  # Doesn't seem to be required, but noisy. Maybe allow 'r' for 'b*' if needed.
+  # Possibly move to an abstraction if anything else needs it.
+  deny /run/udev/data/** r,
+
+  # move out to the gnome abstraction if anyone else needs these
+  /etc/udev/udev.conf r,
+  /sys/devices/**/block/**/uevent r,
+
+  # XFCE
+  /etc/xfce4/defaults.list r,
+
+  # evince specific
+  /etc/ r,
+  /etc/fstab r,
+  /etc/texmf/ r,
+  /etc/texmf/** r,
+  /etc/xpdf/* r,
+  owner @{HOME}/.config/evince/   rw,
+  owner @{HOME}/.config/evince/** rwkl,
+
+  /usr/bin/gs-esp ixr,
+  /usr/bin/mktexpk Cx -> sanitized_helper,
+  /usr/bin/mktextfm Cx -> sanitized_helper,
+  /usr/bin/dvipdfm Cx -> sanitized_helper,
+  /usr/bin/dvipdfmx Cx -> sanitized_helper,
+
+  # supported archivers
+  /{usr/,}bin/gzip ixr,
+  /{usr/,}bin/bzip2 ixr,
+  /usr/bin/unrar* ixr,
+  /usr/bin/unzip ixr,
+  /usr/bin/7zr ixr,
+  /usr/lib/p7zip/7zr ixr,
+  /usr/bin/7za ixr,
+  /usr/lib/p7zip/7za ixr,
+  /usr/bin/zipnote ixr,
+  /{usr/,}bin/tar ixr,
+  /usr/bin/xz ixr,
+
+  # allow read access to anything in /usr/share, for plugins and input methods
+  /usr/local/share/** r,
+  /usr/share/** r,
+  /usr/lib/ghostscript/** mr,
+  /var/lib/ghostscript/** r,
+  /var/lib/texmf/** r,
+
+  # Use abstractions/private-files instead of abstractions/private-files-strict
+  # and add the sensitive files manually to work around LP: #451422. The goal
+  # is to disallow access to the .mozilla folder in general, but to allow
+  # access to the Cache directory, which the browser may tell evince to open
+  # from directly.
+
+  #include <abstractions/private-files>
+  audit deny @{HOME}/.gnupg/{,**} mrwkl,
+  audit deny @{HOME}/.ssh/{,**} mrwkl,
+  audit deny @{HOME}/.gnome2_private/{,**} mrwkl,
+  audit deny @{HOME}/.gnome2/ w,
+  audit deny @{HOME}/.gnome2/keyrings/{,**} mrwkl,
+  audit deny @{HOME}/.kde/{,share/,share/apps/} w,
+  audit deny @{HOME}/.kde/share/apps/kwallet/{,**} mrwkl,
+  audit deny @{HOME}/.pki/{,nssdb/} w,
+  audit deny @{HOME}/.pki/nssdb/{,**} wl,
+
+  audit deny @{HOME}/.mozilla/{,**/} w,
+  audit deny @{HOME}/.mozilla/*/*/* mrwkl,
+  audit deny @{HOME}/.mozilla/**/bookmarkbackups/{,**} mrwkl,
+  audit deny @{HOME}/.mozilla/**/chrome/{,**} mrwkl,
+  audit deny @{HOME}/.mozilla/**/extensions/{,**} mrwkl,
+  audit deny @{HOME}/.mozilla/**/gm_scripts/{,**} mrwkl,
+
+  audit deny @{HOME}/.config/ w,
+  audit deny @{HOME}/.config/chromium/{,**} mrwkl,
+  audit deny @{HOME}/.config/evolution/{,**} mrwkl,
+  audit deny @{HOME}/.evolution/{,**} mrwkl,
+  audit deny @{HOME}/.kde/{,share/,share/apps/} w,
+  audit deny @{HOME}/.kde/share/config/{,**} mrwkl,
+  audit deny @{HOME}/.kde/share/apps/kmail/{,**} mrwkl,
+  audit deny @{HOME}/.{,mozilla-}thunderbird/{,**/} w,
+  audit deny @{HOME}/.{,mozilla-}thunderbird/*/* mrwkl,
+  audit deny @{HOME}/.{,mozilla-}thunderbird/*/[^C][^a][^c][^h][^e]*/{,**} mrwkl,
+
+  # When LP: #451422 is fixed, change the above to simply be:
+  ##include <abstractions/private-files-strict>
+  #owner @{HOME}/.mozilla/**/*Cache/* r,

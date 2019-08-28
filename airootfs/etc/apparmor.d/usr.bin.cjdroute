@@ -1,0 +1,18 @@
+#include <tunables/global>
+
+/usr/bin/cjdroute {
+    #include <abstractions/base>
+    #include <abstractions/nameservice>
+
+    capability net_admin,
+    capability net_raw,
+    capability setuid,
+    capability sys_chroot,
+
+    / r,
+    /dev/net/tun rw,
+    /etc/passwd mr,
+    /proc/sys/kernel/random/uuid r,
+    /tmp/cjdns_pipe_* rw,
+    /usr/bin/cjdroute mrix,
+}

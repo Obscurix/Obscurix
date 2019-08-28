@@ -1,0 +1,6 @@
+# /var      	/var 	 ext4 	 defaults,nosuid 			 1 2
+# /boot		/boot	 ext4	 defaults,nosuid,nodev,noexec		 1 2
+# /home		/home	 ext4	 defaults,nosuid,nodev			 1 2
+# tmpfs         /tmp     tmpfs   defaults,nosuid,nodev,noexec            1 2
+# tmpfs		/dev/shm tmpfs   defaults,nosuid,nodev,noexec		 0 0
+proc            /proc    proc    nosuid,nodev,noexec,hidepid=2,gid=proc  0 0

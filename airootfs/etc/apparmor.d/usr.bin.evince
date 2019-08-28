@@ -1,0 +1,125 @@
+# vim:syntax=apparmor
+
+# evince is not written with application confinement in mind and is designed to
+# operate within a trusted desktop session where anything running within the
+# user's session is trusted. That said, evince will often process untrusted
+# input (PDFs, images, etc). Ideally evince would be written in such a way that
+# image processing is separate from the main process and that processing
+# happens in a restrictive sandbox, but unfortunately that is not currently the
+# case. Because evince will process untrusted input, this profile aims to
+# provide some hardening, but considering evince's design and other factors such
+# as X, gsettings, accessibility, translations, DBus session and system
+# services, etc, complete confinement is not possible.
+
+#include <tunables/global>
+
+/usr/bin/evince flags=(attach_disconnected) {
+  #include <abstractions/evince>
+  
+  # Deny network access.
+  deny network,
+  
+  /usr/lib/gio/modules r,
+  /usr/lib/gio/modules/** r,
+
+  /usr/share/fonts/** rw,
+
+  deny /etc/passwd r,
+  deny /etc/nsswitch.conf r,
+
+  dbus (receive) bus=system,
+  # Allow getting information from various system services
+  dbus (send)
+      bus=system
+      member="Get*"
+      peer=(label=unconfined),
+  # Allow talking to avahi with whatever polkit allows
+  dbus (send)
+      bus=system
+      interface="org.freedesktop.Avahi{,.*}",
+  # Allow talking to colord with whatever polkit allows
+  dbus (send)
+      bus=system
+      interface="org.freedesktop.ColorManager{,.*}",
+
+  /usr/bin/evince rmPx,
+  /usr/bin/evince-previewer Px,
+  /usr/bin/yelp Cx -> sanitized_helper,
+  /usr/bin/bug-buddy px,
+  # 'Show Containing Folder' (LP: #1022962)
+  /usr/bin/nautilus Cx -> sanitized_helper, # Gnome
+  /usr/bin/pcmanfm Cx -> sanitized_helper,  # LXDE
+  /usr/bin/krusader Cx -> sanitized_helper, # KDE
+  /usr/bin/thunar Cx -> sanitized_helper,   # XFCE
+
+  # For text attachments
+  /usr/bin/gedit ixr,
+
+  # For Send to
+  /usr/bin/nautilus-sendto Cx -> sanitized_helper,
+
+  # GLib desktop launch helper (used under the hood by g_app_info_launch)
+  /usr/lib/@{multiarch}/glib-[0-9]*/gio-launch-desktop rmix,
+  /usr/bin/env ixr,
+
+  # allow directory listings (ie 'r' on directories) so browsing via the file
+  # dialog works
+  / r,
+  /**/ r,
+
+  # This is need for saving files in your home directory without an extension.
+  # Changing this to '@{HOME}/** r' makes it require an extension and more
+  # secure (but with 'rw', we still have abstractions/private-files-strict in
+  # effect).
+  owner @{HOME}/** rw,
+  owner /media/**  rw,
+  owner @{HOME}/.local/share/gvfs-metadata/** l,
+  owner /{,var/}run/user/*/gvfs-metadata/** l,
+
+  # Maybe add to an abstraction?
+  /etc/dconf/**                                       r,
+  owner @{HOME}/.cache/dconf/user                     rw,
+  owner @{HOME}/.config/dconf/user                    r,
+  owner /{,var/}run/user/*/dconf/                     w,
+  owner /{,var/}run/user/*/dconf/user                 rw,
+  owner /{,var/}run/user/*/dconf-service/keyfile/     w,
+  owner /{,var/}run/user/*/dconf-service/keyfile/user rw,
+
+  owner /{,var/}run/user/*/at-spi2-*/   rw,
+  owner /{,var/}run/user/*/at-spi2-*/** rw,
+
+  # from http://live.gnome.org/Evince/SupportedDocumentFormats. Allow
+  # read and write for all supported file formats
+  /**.[aA][iI]         rw,
+  /**.[bB][mM][pP]     rw,
+  /**.[dD][jJ][vV][uU] rw,
+  /**.[dD][vV][iI]     rw,
+  /**.[gG][iI][fF]     rw,
+  /**.[jJ][pP][gG]     rw,
+  /**.[jJ][pP][eE][gG] rw,
+  /**.[oO][dD][pP]     rw,
+  /**.[fFpP][dD][fF]   rw,
+  /**.[pP][nN][mM]     rw,
+  /**.[pP][nN][gG]     rw,
+  /**.[pP][sS]         rw,
+  /**.[eE][pP][sS]     rw,
+  /**.[tT][iI][fF]     rw,
+  /**.[tT][iI][fF][fF] rw,
+  /**.[xX][pP][mM]     rw,
+  /**.[gG][zZ]         rw,
+  /**.[bB][zZ]2        rw,
+  /**.[cC][bB][rRzZ7]  rw,
+  /**.[xX][zZ]         rw,
+
+  # evince creates a temporary stream file like '.goutputstream-XXXXXX' in the
+  # directory a file is saved. This allows that behavior.
+  owner /**/.goutputstream-* w,
+}
+
+/usr/bin/evince-previewer {
+
+}
+
+/usr/bin/evince-thumbnailer {
+
+}

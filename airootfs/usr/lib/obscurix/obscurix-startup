@@ -1,0 +1,90 @@
+#!/bin/bash
+
+set_tor_bridge() {
+  # Ask if the user needs to use a bridge.
+  if zenity --question --no-wrap --text="Do you need to use a Tor bridge to connect to the Tor network?
+These are used if your ISP (Internet Service Provider) blocks access to the Tor network."; then
+ 
+    # Use a bridge the user knows.
+    bridge_info=$(zenity --entry --text="Please enter the bridge information.")
+    echo "
+UseBridges 1
+Bridge ${bridge_info}" | tee -a /etc/tor/torrc >/dev/null
+
+    zenity --info --no-wrap --text="Tor will now use the specified bridge. Please wait until you are connected to the Tor network."
+  else
+    zenity --info --no-wrap --text="Tor will now start as usual. Please wait until you are connected to the Tor network."
+  fi
+}
+
+start_tor() {
+  # Start Tor.
+  mkdir -m 700 /run/tor # Needed for onion-grater's ControlSocket.
+  chown tor:tor -R /run/tor
+  systemctl unmask tor.service
+  systemctl enable --now tor.service
+
+  # Start zeronet.
+  systemctl unmask zeronet.service
+  systemctl enable --now zeronet.service
+
+  sleep 3
+}
+
+tor_check() {
+  # If the Tor daemon isn't running, give an error message.
+  if ! systemctl is-active tor.service >/dev/null 2>&1; then
+    zenity --error --no-wrap --text="ERROR: The Tor daemon is not running."
+  else
+    # If the Tor check doesn't say we are connected to Tor, give an error.
+    if curl -s https://check.torproject.org | grep "browser" >/dev/null; then
+      zenity --info --no-wrap --text="INFO: You are connected to the Tor network."
+    else
+      zenity --error --no-wrap --text="ERROR: You are not connected to the Tor network."
+    fi
+  fi
+}
+
+# Change the keymap.
+get_keymap() {
+  selected_keymap=$(zenity --entry --text="What layout do you want to use? (default: US)")
+  
+  # Run again if the user enters an invalid keymap.
+  for i in $(find /usr/share/kbd/keymaps/ -type f | awk -F"/" '{print $NF}' | sed -e 's/.map.gz//g')
+  do
+    if [ "${selected_keymap}" = "${i}" ]; then
+      keymap_warning="1"
+      break
+    fi
+  done
+
+  if ! [ "${keymap_warning}" = "1" ]; then
+    zenity --error --no-wrap --text="ERROR: That is not a supported layout. Please try again."
+    get_keymap
+  fi
+}
+
+set_keymap() {
+  if zenity --question --no-wrap --text="Do you want to change the keyboard layout? The default layout is US."; then
+    get_keymap
+    
+    selected_keymap_x11="${selected_keymap}"
+
+    # setxkbmap can't take "uk" but can take "gb".
+    # Replace "uk" with "gb" if the user selected it.
+    if [ "${selected_keymap_x11}" = "uk" ]; then
+      selected_keymap_x11="gb"
+    fi
+    
+    # Sets the new keymap for the current X session and console.
+    loadkeys "${selected_keymap}"
+    setxkbmap "${selected_keymap_x11}"
+    
+    zenity --info --width=600 --text="The keyboard layout has been changed to '${selected_keymap}'. If this is an error, go to Applications -> Settings -> Keyboard -> Layout and change it."
+  fi
+}
+
+set_tor_bridge
+start_tor
+tor_check
+set_keymap

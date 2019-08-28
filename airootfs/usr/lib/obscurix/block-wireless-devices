@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Load the rfkill module.
+modprobe rfkill
+
+# Block all wireless devices.
+rfkill block all
+
+# Unblock WiFi.
+rfkill unblock wifi

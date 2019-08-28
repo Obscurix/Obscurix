@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=I2P Browser
+GenericName=Web Browser
+Comment=I2P Browser is +1 for privacy and -1 for mass surveillance
+Categories=Network;WebBrowser;Security;
+Exec=/usr/bin/i2pbrowser
+Icon=/home/user/.icons/i2p
+StartupWMClass=I2P Browser

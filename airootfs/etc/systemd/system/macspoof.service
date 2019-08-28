@@ -1,0 +1,26 @@
+[Unit]
+Description=Spoofs MAC addresses
+Wants=network-pre.target
+Before=network-pre.target
+After=check-boot-parameter.service
+
+[Service]
+ExecStart=/usr/lib/obscurix/spoof-mac-address
+Type=oneshot
+CapabilityBoundingSet=CAP_NET_ADMIN
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+PrivateTmp=true
+MemoryDenyWriteExecute=true
+NoNewPrivileges=true
+RestrictRealtime=true
+RestrictAddressFamilies=AF_INET
+SystemCallArchitectures=native
+#SystemCallFilter=~@clock @cpu-emulation @debug @keyring @ipc @module @mount @obsolete @raw-io
+RestrictNamespaces=true
+
+[Install]
+WantedBy=multi-user.target

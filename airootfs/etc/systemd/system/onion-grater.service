@@ -1,0 +1,16 @@
+[Unit]
+Description=Tor control port filter proxy
+Documentation=https://tails.boum.org/contribute/design/
+
+[Service]
+Type=simple
+ExecStart=/usr/lib/onion-grater
+CapabilityBoundingSet=CAP_DAC_OVERRIDE CAP_SYS_PTRACE
+PrivateDevices=yes
+PrivateTmp=yes
+ProtectHome=yes
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target
+

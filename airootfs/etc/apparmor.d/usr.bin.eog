@@ -1,0 +1,76 @@
+#include <tunables/global>
+
+/usr/bin/eog flags=(attach_disconnected) {
+  #include <abstractions/base>
+  #include <abstractions/gnome>
+
+  owner @{HOME}/.config/glib-2.0/ w,
+  owner @{HOME}/.config/glib-2.0/** w,
+  owner @{HOME}/.config/eog/ w,
+
+  /persistent_ARCH_*/x86_64/upperdir/usr/share/fonts/ r,
+  /persistent_ARCH_*/x86_64/upperdir/usr/share/fonts/** r,
+  owner /persistent_ARCH_*/x86_64/upperdir/home/user/ r,
+  owner /persistent_ARCH_*/x86_64/upperdir/home/user/** r,
+  
+  deny /etc/nsswitch.conf r,
+  deny /etc/host.conf r,
+  deny /etc/resolv.conf r,
+  deny /etc/hosts r,
+  deny /etc/passwd r,
+
+  /etc/fstab r,
+  /usr/bin/eog mr,
+  /usr/bin/gio-launch-desktop mrix,
+  /usr/bin/thunar mrix,
+  /usr/share/applications/ r,
+  /usr/share/applications/Thunar-folder-handler.desktop r,
+  /usr/share/applications/eog.desktop r,
+  /usr/share/applications/krita_jpeg.desktop r,
+  /usr/share/applications/mimeinfo.cache r,
+  /usr/share/eog/icons/ r,
+
+  /usr/share/eog/icons/hicolor/** r,
+
+  /usr/share/gtk-3.0/settings.ini r,
+  /usr/share/icons/ r,
+  
+  /usr/share/icons/Adwaita/** r,  
+  /usr/share/icons/Papirus-Dark/** r,
+  /usr/share/icons/Papirus/** r,
+  
+  /usr/share/icons/default/index.theme r,
+  /usr/share/icons/hicolor/index.theme r,
+  /usr/share/mime/image/jpeg.xml r,
+
+  /usr/share/mime/mime.cache r,
+  /usr/share/pixmaps/ r,
+  /usr/share/thumbnailers/ r,
+  /usr/share/thumbnailers/evince.thumbnailer r,
+  /usr/share/thumbnailers/gdk-pixbuf-thumbnailer.thumbnailer r,
+  /usr/share/thumbnailers/librsvg.thumbnailer r,
+
+  # Allow read access to home directory.
+  owner @{HOME}/ r,
+  owner @{HOME}/** r,
+
+  owner @{HOME}/.Xauthority r,
+  owner @{HOME}/.cache/fontconfig/* r,
+ 
+  owner @{HOME}/.config/dconf/user r,
+  owner @{HOME}/.config/mimeapps.list r,
+  owner @{HOME}/.local/share/applications/ r,
+ 
+  owner @{HOME}/.local/share/recently-used.xbel rw,
+  owner @{HOME}/.local/share/recently-used.xbel.* rw,
+
+  owner @{HOME}/.cache/thumbnails/ w,
+  owner @{HOME}/.cache/thumbnails/** w,
+
+  owner /proc/*/fd/ r,
+  owner /proc/*/mountinfo r,
+
+  owner /run/user/1000/dconf/user rw,
+  owner /usr/share/fonts/** rw,
+
+}

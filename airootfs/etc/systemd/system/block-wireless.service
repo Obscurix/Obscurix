@@ -1,0 +1,24 @@
+[Unit]
+Description=Blocks all wireless devices except WiFi
+Requires=network.target
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/lib/obscurix/block-wireless-devices
+#ProtectSystem=strict
+#ProtectHome=true
+#ProtectKernelTunables=true
+#ProtectKernelModules=true
+#ProtectControlGroups=true
+#PrivateNetwork=true
+#PrivateTmp=true
+#RestrictNamespaces=true
+#MemoryDenyWriteExecute=true
+#NoNewPrivileges=true
+#RestrictRealtime=true
+#RestrictAddressFamilies=AF_INET
+#SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=0.9.4
+Type=Application
+Name=Obscurix Startup
+Comment=Obscurix Startup
+Exec=sudo --non-interactive /usr/lib/obscurix/obscurix-startup
+OnlyShowIn=XFCE;
+StartupNotify=false
+Terminal=false
+Hidden=false

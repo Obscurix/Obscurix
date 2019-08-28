@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Freenet Browser
+GenericName=Web Browser
+Comment=Freenet Browser is +1 for privacy and -1 for mass surveillance
+Categories=Network;WebBrowser;Security;
+Exec=/usr/bin/freenet-browser
+Icon=/home/user/.icons/freenet.ico
+StartupWMClass=Freenet Browser

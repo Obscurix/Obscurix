@@ -1,0 +1,9 @@
+[Unit]
+Description=Checks for custom boot parameters
+
+[Service]
+ExecStart=/usr/lib/obscurix/boot-parameters
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target

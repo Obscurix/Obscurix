@@ -1,0 +1,2 @@
+@{torbrowser_installation_dir}=@{HOME}/tor-browser_en-US
+@{torbrowser_home_dir}=@{torbrowser_installation_dir}/Browser
