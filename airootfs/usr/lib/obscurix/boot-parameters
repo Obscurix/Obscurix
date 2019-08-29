@@ -47,15 +47,17 @@ enable_ipfs() {
 enable_cjdns() {
   # Only run if IPv6 has not been disabled.
   if ! grep "ipv6.disable=1" /proc/cmdline; then
-    # Enable cjdns.
-    systemctl unmask cjdns.service
-    systemctl enable --now cjdns.service
-
     # Generate configuration file.
     cjdroute --genconf > /etc/cjdroute.conf
     chmod 600 /etc/cjdroute.conf
-    chown cjdns:cjdns /etc/cjdroute.conf
-  else
+ 
+    # Make cjdns run as the 'cjdns' user.
+    sed -i 's/{ \"setuser\": \"nobody\"/sed -i 's/{ \"setuser\": \"cjdns\"/ /etc/cjdroute.conf
+
+    # Enable cjdns.
+    systemctl unmask cjdns.service
+    systemctl enable --now cjdns.service
+ else
     echo "ERROR: IPv6 IS DISABLED."
   fi
 }
