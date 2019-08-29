@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Onion Circuits
+Comment=Monitor Tor circuits and connections
+TryExec=onioncircuits
+Exec=onioncircuits
+StartupNotify=true
+Terminal=false
+Type=Application
+Icon=onioncircuits
+Categories=GTK;Network;
+Keywords=tor;monitor;circuits;
+StartupWMClass=onioncircuits

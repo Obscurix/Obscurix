@@ -1,0 +1,42 @@
+include <tunables/global>
+
+/usr/bin/onioncircuits {
+  #include <abstractions/base>
+  #include <abstractions/gnome>
+  #include <abstractions/ibus>
+  #include <abstractions/nameservice>
+  #include <abstractions/python>
+
+  # Why are these not in abstractions/python?
+  /usr/lib{,32,64}/python{2,3.7}.[0-9]/__pycache__/ rw,
+  /usr/lib{,32,64}/python{2,3.7}.[0-9]/__pycache__/* rw,
+  /usr/lib{,32,64}/python{2,3.7}.[0-9]/**/__pycache__/ rw,
+  /usr/lib{,32,64}/python{2,3.7}.[0-9]/**/__pycache__/* rw,
+  /usr/lib{,32,64}/python{2,3.7}/**/__pycache__/ rw,
+  /usr/lib{,32,64}/python{2,3.7}/**/__pycache__/* rw,
+
+  /usr/bin/ r,
+  /usr/bin/onioncircuits r,
+  /usr/share/glib-2.0/schemas/gschemas.compiled r,
+  /usr/share/iso-codes/json/** r,
+  /usr/share/xml/iso-codes/** r,
+  owner @{PROC}/@{pid}/status r,
+
+  /usr/bin/env rix,
+  /usr/bin/python{3,3.7} rix,
+
+  deny /etc/machine-id r,
+
+  # Accessibility support
+  owner /{,var/}run/user/*/at-spi2-*/ rw,
+  owner /{,var/}run/user/*/at-spi2-*/** rw,
+
+  # Needed to connect to the system Tor daemon when cookie authentication
+  # is enabled.
+  /run/tor/control.authcookie r,
+
+  # Silence logs
+  deny /run/user/[0-9]*/dconf/user rwk,
+  deny @{HOME}/.config/dconf/user r,
+}
+

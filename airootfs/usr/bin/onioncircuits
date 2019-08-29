@@ -1,0 +1,660 @@
+#!/usr/bin/env python3
+#
+# Onion Circuits - a GTK applicaton to display Tor circuits and streams
+# Copyright (C) 2016  Tails developers
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import gettext
+import logging
+import os
+import sys
+
+try:
+    import pycountry
+except ImportError:
+    pycountry = None
+
+import gi
+import stem
+import stem.connection
+import stem.control
+
+gi.require_version('GLib', '2.0')
+gi.require_version('GObject', '2.0')
+gi.require_version('Gtk', '3.0')
+from gi.repository import (GLib,
+                           GObject,
+                           Gtk)
+
+gettext.install('onioncircuits')
+
+if 'DEBUG' in os.environ and os.environ['DEBUG']:
+    logging.basicConfig(level=int(os.environ['DEBUG']))
+else:
+    logging.getLogger('stem').setLevel(logging.WARNING)
+
+
+class OnionCircuitsWindow(Gtk.ApplicationWindow):
+    """Onion Circuits main window
+
+    This class contains all the UI and the logic to update.
+    """
+
+    # Constants used to distinguish circuits and streams in our TreeStore
+    TYPE_CIRC = 0
+    TYPE_STREAM = 1
+
+    def __init__(self, app):
+        """Create a new OnionCircuitsWindow
+
+        :var Gtk.Application app: the application which own the window
+        """
+        Gtk.Window.__init__(self, application=app)
+
+        self._listeners_initialized = False
+        self._geoip_message_shown = False
+        self._circ_to_iter = {}
+        self._stream_to_iter = {}
+        self.controller = self.get_application().controller
+
+        self._create_ui()
+
+        if self.controller:
+            self.init_listeners()
+            self.populate_treeview()
+        else:
+            GLib.timeout_add_seconds(1, self.controller_connect_cb)
+            self._path.set_sensitive(False)
+            self._treeview.set_sensitive(False)
+            self._infobar_label.set_text(_("You are not connected to Tor yet..."))
+            self._infobar.set_message_type(Gtk.MessageType.ERROR)
+            self._infobar.show()
+
+    def _create_ui(self):
+        """Creates the user interface
+        """
+        self.set_default_size(
+                width=min(900, self.get_screen().get_width()),
+                height=min(500, self.get_screen().get_height()))
+        self.set_icon_name('onioncircuits')
+        self.connect('delete-event', self.delete_event_cb)
+
+        headerbar = Gtk.HeaderBar()
+        headerbar.set_title(_("Onion Circuits"))
+        headerbar.set_show_close_button(True)
+        self.set_titlebar(headerbar)
+
+        grid = Gtk.Grid()
+        grid.set_column_homogeneous(True)
+        self.add(grid)
+
+        self._infobar = Gtk.InfoBar()
+        self._infobar.set_no_show_all(True)
+        self._infobar_label = Gtk.Label("")
+        self._infobar_label.show()
+        self._infobar.get_content_area().add(self._infobar_label)
+        self._infobar.connect('response', lambda infobar, rid, data=None: self._infobar.hide())
+        grid.attach(self._infobar, 0, 0, 2, 1)
+
+        # Circuits/streams list
+        self._treestore = Gtk.TreeStore(GObject.TYPE_INT,     # TYPE_CIRC or TYPE_STREAM
+                                        GObject.TYPE_STRING,  # id
+                                        GObject.TYPE_STRING,  # path
+                                        GObject.TYPE_STRING)  # status
+        self._treeview = Gtk.TreeView.new_with_model(self._treestore)
+        self._treeview.get_selection().connect('changed', self.cb_treeselection_changed)
+
+        def append_column(tv, col, name=None):
+            tvcolumn = Gtk.TreeViewColumn(name)
+            tv.append_column(tvcolumn)
+            cell = Gtk.CellRendererText()
+            tvcolumn.pack_start(cell, True)
+            tvcolumn.add_attribute(cell, 'text', col)
+        append_column(self._treeview, 2, _("Circuit"))
+        append_column(self._treeview, 3, _("Status"))
+
+        scrolledwindow_circuits = Gtk.ScrolledWindow()
+        scrolledwindow_circuits.add(self._treeview)
+        scrolledwindow_circuits.set_property('margin', 6)
+        scrolledwindow_circuits.set_property('expand', True)
+        scrolledwindow_circuits.set_property('halign', Gtk.Align.FILL)
+        scrolledwindow_circuits.set_property('valign', Gtk.Align.FILL)
+        scrolledwindow_circuits.set_policy(
+                hscrollbar_policy=Gtk.PolicyType.AUTOMATIC,
+                vscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
+        grid.attach(scrolledwindow_circuits, 0, 1, 1, 1)
+
+        # Circuit details
+        self._path = Gtk.ListBox()
+        self._path.set_selection_mode(Gtk.SelectionMode.NONE)
+        self._placeholder = Gtk.Label(_("Click on a circuit for more detail about its Tor relays."))
+        self._path.set_placeholder(self._placeholder)
+
+        scrolledwindow_path = Gtk.ScrolledWindow()
+        scrolledwindow_path.add(self._path)
+        scrolledwindow_path.set_property('margin', 6)
+        scrolledwindow_path.set_property('expand', True)
+        scrolledwindow_path.set_property('halign', Gtk.Align.FILL)
+        scrolledwindow_path.set_property('valign', Gtk.Align.FILL)
+        scrolledwindow_path.set_policy(
+                hscrollbar_policy=Gtk.PolicyType.AUTOMATIC,
+                vscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
+        grid.attach(scrolledwindow_path, 1, 1, 1, 1)
+
+        self.show_all()
+
+    def delete_event_cb(self, widget, event, data=None):
+        """Hide the window immediately on close.
+
+        This callback is connected to window's 'delete-event' and forces Gtk to
+        hide the window while waiting for all threads to close.
+        """
+        logging.info("quitting, waiting all threads to return...")
+        self.hide()
+        while Gtk.events_pending():
+            Gtk.main_iteration()
+        return False
+
+    # TOR CONTROL LISTENERS
+    # =====================
+
+    def init_listeners(self):
+        """Connect our handlers to Tor event listeners
+        """
+        # These handlers won't be executed in the main thread, they will have to
+        # do the real work in another method executed in the main thread by
+        # GLib.idle_add in order not to make Gtk crazy.
+        if not self._listeners_initialized:
+            self.controller.add_event_listener(self.update_circ_handler,
+                    stem.control.EventType.CIRC)
+            self.controller.add_event_listener(self.update_stream_handler,
+                    stem.control.EventType.STREAM)
+            self.controller.add_status_listener(self.update_status_handler)
+        self._listeners_initialized = True
+
+    def update_circ_handler(self, circ_event):
+        """Handler for stem.control.EventType.CIRC
+        """
+        # Handle the event in main thread
+        GLib.idle_add(self.update_circ_cb, circ_event)
+
+    def update_stream_handler(self, stream_event):
+        """Handler for stem.control.EventType.STREAM
+        """
+        # Handle the event in main thread
+        GLib.idle_add(self.update_stream_cb, stream_event)
+
+    def update_status_handler(self, controller, state, timestamp):
+        """Handler for stem.control.BaseController.add_status_listener
+        """
+        if state == stem.control.State.CLOSED:
+            GLib.idle_add(self.connection_closed_cb)
+            GLib.timeout_add_seconds(1, self.controller_reconnect_cb)
+        elif state == stem.control.State.INIT:
+            GLib.idle_add(self.connection_init_cb)
+
+    # RECONNECTION MANAGEMENT
+    # =======================
+
+    def connection_closed_cb(self):
+        """Update the UI after we lost conection to the Tor daemon
+
+        This callback is called when we lost connection with the Tor daemon.
+
+        :returns: **False**
+        """
+        logging.debug("Controller connection closed")
+        self._path.set_sensitive(False)
+        self._treeview.set_sensitive(False)
+        self._infobar_label.set_text(_("The connection to Tor was lost..."))
+        self._infobar.set_message_type(Gtk.MessageType.ERROR)
+        self._infobar.show()
+        self._treestore.clear()
+        self._placeholder.set_visible(False)
+        return False
+
+    def connection_init_cb(self):
+        """Update the UI after a (re)connection to the Tor daemon
+
+        This callback is called when we (re)connect to the Tor daemon.
+
+        :returns: **False**
+        """
+        logging.info("controller connected")
+        self._path.set_sensitive(True)
+        self._treeview.set_sensitive(True)
+        self._infobar.set_visible(False)
+        self.init_listeners()
+        self.populate_treeview()
+
+        return False
+
+    def controller_reconnect_cb(self):
+        """Try to reconnect to the Tor daemon
+
+        This callback is called regularly by self.update_status_handler if the
+        connection to the Tor daemon is lost. It calls self.connection_init_cb
+        after a successful reconnection.
+
+        :returns: **bool** that's **False** if we reconnected successfully and
+        **True** if we failed to reconnect (so that GLib.timeout_add will call
+        the method again).
+        """
+        logging.debug("trying to reconnect the controller")
+        try:
+            self.controller.connect()
+            self.controller.authenticate()
+        except stem.SocketError:
+            return True
+        self.connection_init_cb()
+        return False
+
+    def controller_connect_cb(self):
+        """Try to connect to the Tor daemon for the 1st time
+
+        This callback is called regularly by self.__init__ if there is no
+        connection to the Tor daemon at startup. It calls
+        self.connection_init_cb after a successful connection.
+
+        :returns: **bool** that's **False** if we connected successfully and
+        **True** if we failed to connect (so that GLib.timeout_add will call
+        the method again).
+        """
+        logging.debug("trying to connect the controller")
+        controller = self.get_application().connect_controller()
+        if controller:
+            self.controller = controller
+            self.connection_init_cb()
+            return False
+        else:
+            return True
+
+    # CIRCUITS AND STREAMS LIST
+    # =========================
+
+    def remove_treeiter(self, treeiter):
+        """Remove a treeiter from our circuits/streams list if it is valid
+
+        :var Gtk.TreeIter treeiter: the treeiter to remove
+
+        :returns: **False**
+        """
+        if self._treestore.iter_is_valid(treeiter):
+            self._treestore.remove(treeiter)
+        else:
+            # XXX: it may happen that the treeiter is not valid anymore
+            # e.g. because it represents a stream that has been remapped
+            # to another circuit.
+            logging.warning("cannot remove %s which is not valid" % treeiter)
+        return False  # to cancel the repetition when used in timeout_add
+
+    # Circuits
+    # --------
+
+    @staticmethod
+    def circuit_label(circuit):
+        """Returns a label for a circuit
+
+        :var stem.response.events.CircuitEvent circuit: the circuit
+
+        :returns: **str** representing the circuit
+        """
+        if circuit.path:
+            circ_str = _(', ').join([nick if nick else fp for fp, nick in circuit.path])
+        else:
+            circ_str = _("...")
+        return circ_str
+
+    def add_circuit(self, circuit):
+        """Adds a circuit to our circuits/streams list
+
+        :var stem.response.events.CircuitEvent circuit: the circuit
+
+        :returns: the :class:`Gtk.TreeIter` corresponding to the circuit
+        """
+        self._placeholder.set_visible(True)
+        circ_iter = self._treestore.append(None,
+                        [self.TYPE_CIRC,
+                        circuit.id,
+                        self.circuit_label(circuit),
+                        str(circuit.status).capitalize()])
+        self._circ_to_iter[circuit.id] = circ_iter
+        return circ_iter
+
+    def update_circuit(self, circuit):
+        """Updates a circuit in our circuits/streams list
+
+        :var stem.response.events.CircuitEvent circuit: the circuit
+        """
+        logging.debug("updating circuit %s" % circuit.id)
+        if circuit.reason:
+            status = _("%s: %s") % (str(circuit.status).capitalize(),
+                                    str(circuit.reason).lower())
+        else:
+            status = str(circuit.status).capitalize()
+        self._treestore.set(
+            self._circ_to_iter[circuit.id],
+            2, self.circuit_label(circuit),
+            3, status)
+
+    def remove_circuit(self, circuit):
+        """Remove a circuit from our circuits/streams list
+
+        :var stem.response.events.CircuitEvent circuit: the circuit
+        """
+
+        self.remove_treeiter(self._circ_to_iter[circuit.id])
+        del self._circ_to_iter[circuit.id]
+
+    def remove_circuit_delayed(self, circuit):
+        """Remove a circuit from our circuits/streams list after a delay
+
+        The delay gives the user time to read the reason of the removal.
+
+        :var stem.response.events.CircuitEvent circuit: the circuit
+        """
+        circ_iter = self._circ_to_iter[circuit.id]
+        del self._circ_to_iter[circuit.id]
+        GLib.timeout_add_seconds(5, self.remove_treeiter, circ_iter)
+
+    def update_circ_cb(self, circ_event):
+        """Updates the circuits/streams list in response to a the
+        :class:`stem.response.events.CircuitEvent`
+
+        :var stem.response.events.CircuitEvent circ_event: the circuit event
+        """
+        circ_is_closed = circ_event.status in [stem.CircStatus.FAILED,
+                                               stem.CircStatus.CLOSED]
+
+        if circ_event.id not in self._circ_to_iter:
+            if not circ_is_closed:
+                self.add_circuit(circ_event)
+        else:
+            self.update_circuit(circ_event)
+            if circ_is_closed:
+                self.remove_circuit_delayed(circ_event)
+
+    # Streams
+    # -------
+
+    @staticmethod
+    def stream_label(stream):
+        """Returns a label for a stream
+
+        :var stem.response.events.StreamEvent stream: the stream
+
+        :returns: **str** representing the stream
+        """
+        return "%s" % stream.target
+
+    def add_stream(self, stream):
+        """Adds a circuit to our circuits/streams list
+
+        :var stem.response.events.StreamEvent stream: the stream
+
+        :returns: the :class:`Gtk.TreeIter` corresponding to the stream
+        """
+        if not stream.circ_id:
+            return None
+        circ_iter = self._circ_to_iter[stream.circ_id]
+        if not circ_iter:
+            logging.warning("no iter found for %s" % circ_id)
+            circ_iter = self.add_circuit(self.controller.get_circuit(circ_id))
+        stream_iter = self._treestore.append(circ_iter,
+                    [self.TYPE_STREAM,
+                    stream.id,
+                    self.stream_label(stream),
+                    str(stream.status).capitalize()])
+        self._stream_to_iter[stream.id] = stream_iter
+        self._treeview.expand_to_path(self._treestore.get_path(stream_iter))
+        return stream_iter
+
+    def update_stream(self, stream):
+        """Updates a stream in our circuits/streams list
+
+        :var stem.response.events.StreamEvent stream: the stream
+        """
+        stream_iter = self._stream_to_iter[stream.id]
+        circuit_iter = self._treestore.iter_parent(stream_iter)
+        if stream.circ_id != self._treestore.get_value(circuit_iter, 1):
+            # The stream doesn't belong to its parent circuit anymore. Remove it.
+            self.remove_stream(stream)
+            if stream.circ_id:
+                # The stream has a new circuit, add it with its new parent.
+                stream_iter = self.add_stream(stream)
+        else:
+            # The stream didn't change parent. Update it.
+            #
+            # We should not update the stream label because this would
+            # replace the hostname by its IP address.
+            if stream.status:
+                self._treestore.set(stream_iter, 3, str(stream.status).capitalize())
+
+    def remove_stream(self, stream):
+        """Remove a stream from our circuits/streams list
+
+        :var stem.response.events.StreamEvent stream: the stream
+        """
+        self.remove_treeiter(self._stream_to_iter[stream.id])
+        del self._stream_to_iter[stream.id]
+
+    def remove_stream_delayed(self, stream):
+        """Remove a stream from our circuits/streams list after a delay
+
+        The delay gives the user time to read the reason of the removal.
+
+        :var stem.response.events.StreamEvent stream: the stream
+        """
+        stream_iter = self._stream_to_iter[stream.id]
+        if stream_iter:
+            del self._stream_to_iter[stream.id]
+            GLib.timeout_add_seconds(5, self.remove_treeiter, stream_iter)
+
+    def update_stream_cb(self, stream_event):
+        """Updates the circuits/streams list in response to a the
+        :class:`stem.response.events.StreamEvent`
+
+        :var stem.response.events.StreamEvent stream_event: the stream event
+        """
+        if stream_event.id not in self._stream_to_iter:
+            self.add_stream(stream_event)
+        else:
+            self.update_stream(stream_event)
+            if (stream_event.status == stem.StreamStatus.FAILED or
+                    stream_event.status == stem.StreamStatus.CLOSED or
+                    stream_event.status == stem.StreamStatus.DETACHED):
+                self.remove_stream_delayed(stream_event)
+
+    def populate_treeview(self):
+        """Synchronize the circuits/streams list with the Tor daemon
+        """
+        self._treestore.clear()
+        self._circ_to_iter = {}
+        self._stream_to_iter = {}
+
+        for c in self.controller.get_circuits():
+            self.add_circuit(c)
+        for s in self.controller.get_streams():
+            self.add_stream(s)
+        self._treeview.expand_all()
+
+    # CIRCUIT DETAILS
+    # ===============
+
+    def cb_treeselection_changed(self, treeselection, data=None):
+        """Handle selection change in the circuits/streams list
+
+        Display details for the circuit selected in the circuits/streams list
+
+        :var Gtk.TreeSelection treeselection: the selection
+
+        :returns: **True**
+        """
+        (model, selected_iter) = treeselection.get_selected()
+        if not selected_iter:
+            self.clear_circuit_details()
+            return False
+
+        if model.get_value(selected_iter, 0) == self.TYPE_STREAM:  # Stream
+            circuit_iter = model.iter_parent(selected_iter)
+        else:  # Circuit
+            circuit_iter = selected_iter
+
+        circ_id = model.get_value(circuit_iter, 1)
+        try:
+            circuit = self.controller.get_circuit(circ_id)
+        except ValueError as e:  # The circuit doesn't exist anymore
+            logging.warning("circuit %s not known by Tor: %s" % (circ_id, e))
+            return False
+        self.show_circuit_details(circuit)
+        return False
+
+    def clear_circuit_details(self):
+        def remove_row(child, container):
+            container.remove(child)
+            return False
+        self._path.foreach(remove_row, self._path)
+
+    def show_circuit_details(self, circuit):
+        """Display details for a circuit
+
+        :var stem.response.events.CircuitEvent circuit: the circuit
+        """
+        self.clear_circuit_details()
+
+        for fp, nick in circuit.path:
+            self.display_node(fp, nick)
+
+        self._path.show_all()
+
+    def get_country(self, address):
+        """Get the country corresponding to an IP address
+
+        :var str address: an ip address
+
+        :returns: a string containing the country name, or **None**
+        """
+        try:
+            country = self.controller.get_info("ip-to-country/%s" % address)
+        except stem.ProtocolError:
+            country = None
+            if not self._geoip_message_shown:
+                self._infobar_label.set_text(_("GeoIP database unavailable. "
+                                               "No country information will be displayed."))
+                self._infobar.set_message_type(Gtk.MessageType.WARNING)
+                self._infobar.show()
+                self._geoip_message_shown = True
+
+        if pycountry and country:
+            try:
+                country = pycountry.countries.get(alpha2=country.upper()).name
+            except KeyError:
+                # If pycountry can't find the country, just display the string
+                # returned by Tor.
+                pass
+        return country
+
+    def display_node(self, fingerprint, nickname):
+        """Display details for a node
+
+        :var string fingerprint: the fingerprint of the node
+
+        :var string nickname: the nickname of the node
+        """
+        try:
+            status_entry = self.controller.get_network_status(fingerprint)
+        # XXX: we should use stem.DescriptorUnavailable once we have stem 1.4
+        except stem.OperationFailed:
+            status_entry = None
+
+        if status_entry:
+            country = self.get_country(status_entry.address)
+            if country:
+                ip_with_country = _("%s (%s)") % (status_entry.address, country)
+            else:  # we couldn't get a country, just display the IP
+                ip_with_country = str(status_entry.address)
+
+            published = status_entry.published
+            bandwidth = _("%.2f Mb/s") % (status_entry.bandwidth/1024.)
+        else:
+            published = _("Unknown")
+            ip_with_country = _("Unknown")
+            bandwidth = _("Unknown")
+
+        grid = Gtk.Grid()
+        grid.set_property('row-spacing', 6)
+        grid.set_property('column-spacing', 12)
+        grid.set_property('margin', 12)
+
+        title = Gtk.Label()
+        title.set_markup("<b>%s</b>" % nickname)
+        title.set_halign(Gtk.Align.START)
+        grid.attach(title, 0, 0, 2, 1)
+
+        line = 1
+        for l, v in [(_("Fingerprint:"), fingerprint),
+                     (_("Published:"), published),
+                     (_("IP:"), ip_with_country),
+                     (_("Bandwidth:"), bandwidth),
+                    ]:
+            label = Gtk.Label(l)
+            label.set_halign(Gtk.Align.START)
+            grid.attach(label, 0, line, 1, 1)
+            value = Gtk.Label(v)
+            value.set_halign(Gtk.Align.START)
+            grid.attach(value, 1, line, 1, 1)
+            line += 1
+
+        self._path.add(grid)
+        grid.show_all()
+
+
+class OnionCircuitsApplication(Gtk.Application):
+    """Onion Circuits application
+
+    :var stem.control.Controller controller: a controller to the Tor daemon
+    """
+
+    def __init__(self):
+        Gtk.Application.__init__(self)
+
+        self.connect_controller()
+
+    def connect_controller(self):
+        """Connects the controller to the Tor daemon.
+        """
+        connect_args = dict()
+        if 'TOR_CONTROL_SOCKET' in os.environ:
+            connect_args['control_socket'] = os.environ.get('TOR_CONTROL_SOCKET')
+        if 'TOR_CONTROL_ADDRESS' in os.environ or \
+           'TOR_CONTROL_PORT' in os.environ:
+            connect_args['control_port'] = (
+                os.environ.get('TOR_CONTROL_ADDRESS', '127.0.0.1'),
+                int(os.environ.get('TOR_CONTROL_PORT', 9151))
+            )
+        self.controller = stem.connection.connect(**connect_args)
+        return self.controller
+
+    def do_activate(self):
+        win = OnionCircuitsWindow(self)
+        win.show_all()
+
+    def do_startup(self):
+        Gtk.Application.do_startup(self)
+
+app = OnionCircuitsApplication()
+exit_status = app.run(sys.argv)
+sys.exit(exit_status)
+
