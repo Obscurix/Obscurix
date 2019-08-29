@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Protects against https downgrade attacks.
+# https://github.com/Whonix/scurl
+
+scurl --location --remote-name-all --remote-header-name "$@"

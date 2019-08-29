@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Protects against https downgrade attacks.
+# https://github.com/Whonix/scurl
+
+curl --tlsv1.2 --proto =https "$@"
