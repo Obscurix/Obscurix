@@ -95,3 +95,4 @@ set_tor_bridge
 start_tor
 tor_check
 set_keymap
+setup_audio
