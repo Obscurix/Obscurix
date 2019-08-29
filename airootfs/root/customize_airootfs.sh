@@ -246,3 +246,9 @@ for i in ping rsh rlogin rcp
 do
   setcap -r "/usr/bin/${i}"
 done
+
+# Unmute the sound card's volume.
+amixer sset Master unmute
+amixer sset Speaker unmute
+amixer sset Headphone unmute
+
