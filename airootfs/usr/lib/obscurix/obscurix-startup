@@ -84,6 +84,13 @@ set_keymap() {
   fi
 }
 
+setup_audio() {
+  # Unmute the sound card's volume.
+  amixer sset Master unmute
+  amixer sset Speaker unmute
+  amixer sset Headphone unmute
+}
+
 set_tor_bridge
 start_tor
 tor_check
