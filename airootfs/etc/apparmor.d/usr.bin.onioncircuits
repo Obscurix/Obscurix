@@ -7,6 +7,14 @@ include <tunables/global>
   #include <abstractions/nameservice>
   #include <abstractions/python>
 
+  /persistent_ARCH_*/x86_64/upperdir/usr/bin/ r,
+  /persistent_ARCH_*/x86_64/upperdir/usr/lib/python3.7/ r,
+  /persistent_ARCH_*/x86_64/upperdir/usr/lib/python3.7/site-packages/ r,
+  /persistent_ARCH_*/x86_64/upperdir/usr/share/fonts/ r,
+  /persistent_ARCH_*/x86_64/upperdir/usr/share/fonts/** r,
+  /usr/share/gtk-3.0/settings.ini r,
+  owner /usr/share/fonts/** r,
+
   # Why are these not in abstractions/python?
   /usr/lib{,32,64}/python{2,3.7}.[0-9]/__pycache__/ rw,
   /usr/lib{,32,64}/python{2,3.7}.[0-9]/__pycache__/* rw,
