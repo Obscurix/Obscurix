@@ -1,6 +1,6 @@
 include <tunables/global>
 
-/usr/bin/onioncircuits {
+/usr/bin/onioncircuits flags=(attach_disconnected) {
   #include <abstractions/base>
   #include <abstractions/gnome>
   #include <abstractions/ibus>
@@ -13,7 +13,7 @@ include <tunables/global>
   /persistent_ARCH_*/x86_64/upperdir/usr/share/fonts/ r,
   /persistent_ARCH_*/x86_64/upperdir/usr/share/fonts/** r,
   /usr/share/gtk-3.0/settings.ini r,
-  owner /usr/share/fonts/** r,
+  owner /usr/share/fonts/** rw,
 
   # Why are these not in abstractions/python?
   /usr/lib{,32,64}/python{2,3.7}.[0-9]/__pycache__/ rw,
