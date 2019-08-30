@@ -14,7 +14,7 @@
 #include <tunables/global>
 
 /usr/bin/evince flags=(attach_disconnected) {
-  #include <abstractions/evince>
+  #include <abstractions/gnome>
   
   # Deny network access.
   deny network,
@@ -26,21 +26,6 @@
 
   deny /etc/passwd r,
   deny /etc/nsswitch.conf r,
-
-  dbus (receive) bus=system,
-  # Allow getting information from various system services
-  dbus (send)
-      bus=system
-      member="Get*"
-      peer=(label=unconfined),
-  # Allow talking to avahi with whatever polkit allows
-  dbus (send)
-      bus=system
-      interface="org.freedesktop.Avahi{,.*}",
-  # Allow talking to colord with whatever polkit allows
-  dbus (send)
-      bus=system
-      interface="org.freedesktop.ColorManager{,.*}",
 
   /usr/bin/evince rmPx,
   /usr/bin/evince-previewer Px,
@@ -76,7 +61,6 @@
   owner @{HOME}/.local/share/gvfs-metadata/** l,
   owner /{,var/}run/user/*/gvfs-metadata/** l,
 
-  # Maybe add to an abstraction?
   /etc/dconf/**                                       r,
   owner @{HOME}/.cache/dconf/user                     rw,
   owner @{HOME}/.config/dconf/user                    r,
@@ -114,6 +98,42 @@
   # evince creates a temporary stream file like '.goutputstream-XXXXXX' in the
   # directory a file is saved. This allows that behavior.
   owner /**/.goutputstream-* w,
+
+  @{PROC}/[0-9]*/fd/ r,
+  @{PROC}/[0-9]*/mountinfo r,
+  owner @{PROC}/[0-9]*/auxv r,
+  owner @{PROC}/[0-9]*/status r,
+
+  # Doesn't seem to be required, but noisy. Maybe allow 'r' for 'b*' if needed.
+  # Possibly move to an abstraction if anything else needs it.
+  deny /run/udev/data/** r,
+
+  # move out to the gnome abstraction if anyone else needs these
+  /etc/udev/udev.conf r,
+  /sys/devices/**/block/**/uevent r,
+
+  # XFCE
+  /etc/xfce4/defaults.list r,
+
+  # evince specific
+  /etc/ r,
+  /etc/fstab r,
+  /etc/texmf/ r,
+  /etc/texmf/** r,
+  /etc/xpdf/* r,
+  owner @{HOME}/.config/evince/   rw,
+  owner @{HOME}/.config/evince/** rwkl,
+
+  # allow read access to anything in /usr/share, for plugins and input methods
+  /usr/local/share/** r,
+  /usr/share/** r,
+  /usr/lib/ghostscript/** mr,
+  /var/lib/ghostscript/** r,
+  /var/lib/texmf/** r,
+
+  #include <abstractions/private-files-strict>
+  audit deny @{HOME}/.pki/{,nssdb/} w,
+  audit deny @{HOME}/.pki/nssdb/{,**} wl,
 }
 
 /usr/bin/evince-previewer {
