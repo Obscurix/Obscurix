@@ -1,0 +1,3 @@
+#!/bin/bash
+
+python2 zeronet.py --config_file /etc/zeronet.conf

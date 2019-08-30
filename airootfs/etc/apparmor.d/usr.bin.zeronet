@@ -1,0 +1,47 @@
+#include <tunables/global>
+
+/usr/bin/zeronet flags=(attach_disconnected) {
+  #include <abstractions/base>
+  #include <abstractions/bash>
+
+  /dev/tty rw,
+
+  /etc/ca-certificates/extracted/** r,
+  /etc/ssl/* r,
+  
+  /etc/host.conf r,
+  /etc/hosts r,
+  /etc/nsswitch.conf r,
+  /etc/passwd r,
+  /etc/resolv.conf r,
+  /etc/mime.types r,
+  
+  /usr/bin/bash ix,
+  /usr/bin/gcc mrix,
+  /usr/bin/ld mrix,
+  /usr/bin/ldconfig mrix,
+  /usr/bin/openssl mrix,
+  /usr/bin/python2.7 mrix,
+  /usr/bin/zeronet r,
+  
+  /usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/collect2 mrix,
+ 
+  /usr/lib/python2.7/** rw,
+  
+  owner /dev/shm/* rw,
+
+  owner /etc/zeronet.conf r,
+  owner /opt/zeronet/** rwm,
+  
+  owner /persistent_ARCH_*/x86_64/upperdir/opt/zeronet/plugins/ r,
+  owner /persistent_ARCH_*/x86_64/upperdir/var/log/zeronet/ r,
+  
+  owner /tmp/* rwm,
+  owner /var/tmp/* rwm,
+  
+  owner /var/lib/zeronet r,
+  owner /var/lib/zeronet/** rwkm,
+  owner /var/log/zeronet/ r,
+  owner /var/log/zeronet/* rwm,
+
+}

@@ -9,7 +9,7 @@ Requires=secure-time-sync.service
 User=zeronet
 Group=zeronet
 WorkingDirectory=/opt/zeronet
-ExecStart=/usr/bin/env python2 zeronet.py --config_file /etc/zeronet.conf
+ExecStart=/usr/bin/zeronet
 SyslogIdentifier=zeronet
 Restart=on-failure
 KillSignal=SIGKILL
@@ -30,6 +30,7 @@ SystemCallArchitectures=native
 RestrictNamespaces=true
 RuntimeDirectoryMode=0700
 SystemCallFilter=~@clock @cpu-emulation @debug @keyring @module @mount @obsolete @raw-io
+AppArmorProfile=/etc/apparmor.d/usr.bin.zeronet
 
 [Install]
 WantedBy=default.target
