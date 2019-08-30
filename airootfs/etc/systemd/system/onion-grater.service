@@ -5,11 +5,20 @@ Documentation=https://tails.boum.org/contribute/design/
 [Service]
 Type=simple
 ExecStart=/usr/lib/onion-grater
+
 CapabilityBoundingSet=CAP_DAC_OVERRIDE CAP_SYS_PTRACE
-PrivateDevices=yes
-PrivateTmp=yes
-ProtectHome=yes
-ProtectSystem=full
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+PrivateTmp=true
+PrivateDevices=true
+NoNewPrivileges=true
+RestrictRealtime=true
+RestrictNamespaces=true
+SystemCallFilter=poll recvfrom readlink futex openat getdents64 close fstat stat read mmap lseek munmap mprotect sendto shutdown ioctl rt_sigaction set_robust_list accept4 madvise write brk socket rt_sigprocmask connect execve listen getrandom getsockname access dup fcntl arch_prctl getpid bind clone statfs sysinfo setsockopt getcwd sigaltstack uname lstat getuid getgid geteuid getegid set_tid_address prlimit64
+SystemCallArchitectures=native
 
 [Install]
 WantedBy=multi-user.target

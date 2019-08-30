@@ -1,0 +1,41 @@
+#include <tunables/global>
+
+/usr/lib/onion-grater flags=(attach_disconnected) {
+  #include <abstractions/base>
+  #include <abstractions/python>
+
+  capability dac_override,
+  capability dac_read_search,
+  capability sys_ptrace,
+
+  ptrace (read),
+
+  owner /persistent_ARCH_*/x86_64/upperdir/usr/lib/ r,
+  owner /persistent_ARCH_*/x86_64/upperdir/usr/lib/python3.7/ r,
+  owner /persistent_ARCH_*/x86_64/upperdir/usr/lib/python3.7/site-packages/ r,
+
+  /usr/bin/python3.7 ix,
+  owner /usr/lib/ r,
+  /usr/lib/onion-grater r,
+   
+  owner /etc/host.conf r,
+  owner /etc/hosts r,
+  owner /etc/nsswitch.conf r,
+  owner /etc/passwd r,
+  owner /etc/resolv.conf r,
+
+  owner /proc/ r,
+  owner /proc/*/mounts r,
+  owner /proc/*/net/tcp r,
+  owner /proc/*/net/udp r,
+
+  /proc/*/attr/current r,
+  /proc/*/fd/ r,
+  /proc/*/stat r,
+  
+  /run/tor/control.authcookie r,
+  /run/tor/control rw,  
+
+  owner /etc/onion-grater.d/ r,
+  owner /etc/onion-grater.d/*.yml r,
+}
