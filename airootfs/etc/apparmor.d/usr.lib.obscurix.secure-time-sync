@@ -1,0 +1,27 @@
+#include <tunables/global>
+
+/usr/lib/obscurix/secure-time-sync flags=(attach_disconnected) {
+  #include <abstractions/base>
+  #include <abstractions/bash>
+
+  capability sys_time,
+
+  owner /dev/tty rw,
+
+  owner /etc/ca-certificates/** r,
+  owner /etc/ssl/** r,
+
+  owner /etc/host.conf r,
+  owner /etc/hosts r,
+  owner /etc/nsswitch.conf r,
+  owner /etc/passwd r,
+  owner /etc/resolv.conf r,
+
+  /usr/bin/bash ix,
+  /usr/bin/curl mrix,
+  /usr/bin/date mrix,
+  /usr/bin/grep mrix,
+  /usr/bin/id mrix,
+  /usr/bin/sed mrix,
+  /usr/lib/obscurix/secure-time-sync r,
+}
