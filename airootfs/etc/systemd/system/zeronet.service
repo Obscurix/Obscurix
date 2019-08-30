@@ -29,7 +29,7 @@ RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
 SystemCallArchitectures=native
 RestrictNamespaces=true
 RuntimeDirectoryMode=0700
-SystemCallFilter=~@clock @cpu-emulation @debug @keyring @module @mount @obsolete @raw-io
+SystemCallFilter=futex openat wait4 stat read fstat close mmap write sendto pread64 fcntl lseek recvfrom mprotect getpid access connect getsockopt munmap unlink brk rt_sigaction epoll_ctl epoll_wait getdents64 socket lstat accept ioctl readlink execve arch_prctl setsockopt getcwd rt_sigprocmask dup2 pwrite64 pipe prlimit64 geteuid getuid getgid getegid rename rmdir statfs uname clone getpeername pipe2 sysinfo shutdown getppid bind set_robust_list chdir rt_sigreturn vfork mkdir getpgrp set_tid_address eventfd2 listen fsync getrusage epoll_create1 getsockname getrandom flock ftruncate
 AppArmorProfile=/etc/apparmor.d/usr.bin.zeronet
 
 [Install]
