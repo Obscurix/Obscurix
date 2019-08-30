@@ -1,0 +1,35 @@
+[Unit]
+Description=Decentralized websites using Bitcoin crypto and the BitTorrent network
+After=tor.service
+Requires=tor.service
+After=secure-time-sync.service
+Requires=secure-time-sync.service
+
+[Service]
+User=zeronet
+Group=zeronet
+WorkingDirectory=/opt/zeronet
+ExecStart=/usr/bin/env python2 zeronet.py --config_file /etc/zeronet.conf
+SyslogIdentifier=zeronet
+Restart=on-failure
+KillSignal=SIGKILL
+ProtectSystem=strict
+ReadWriteDirectories=/var/log/zeronet /var/lib/zeronet /opt/zeronet
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+PrivateTmp=true
+PrivateDevices=true
+PrivateUsers=true
+MemoryDenyWriteExecute=true
+NoNewPrivileges=true
+RestrictRealtime=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallArchitectures=native
+RestrictNamespaces=true
+RuntimeDirectoryMode=0700
+SystemCallFilter=~@clock @cpu-emulation @debug @keyring @module @mount @obsolete @raw-io
+
+[Install]
+WantedBy=default.target
