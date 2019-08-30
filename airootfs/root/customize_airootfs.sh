@@ -34,7 +34,7 @@ chmod 755 /etc/ /etc/profile.d/ /etc/iptables/ /etc/apparmor.d/ /etc/apparmor.d/
 chmod 644 /etc/fstab /etc/profile.d/umask.sh /etc/modprobe.d/*.conf /etc/iptables/iptables.rules /etc/apparmor.d/torbrowser.Browser.firefox /etc/apparmor.d/usr.bin.tor /etc/apparmor.d/tunables/torbrowser /etc/environment /home/user/.config/xfce4/xfconf/xfce-perchannel-xml/*.xml /etc/dnsmasq.conf /etc/NetworkManager/conf.d/dns.conf /etc/pam.d/* /usr/share/backgrounds/xfce/background.png /home/user/.bash_profile /etc/onion-grater.d/*.yml
 chmod 700 /home/user/.config/xfce4/xfconf/xfce-perchannel-xml/ /home/user/.config/autostart /home/user/.config/autostart/obscurix-startup.desktop /usr/lib/obscurix/* /home/user/.config/hexchat /home/user/.config/vlc /home/user/.thunderbird/ /home/user/.thunderbird/profile.default/ /home/user/.config/xfce4/terminal /home/user/.bash_profile /home/user/.config/xfce4/desktop
 chmod 600 /home/user/.config/hexchat/*.conf /home/user/.config/vlc/vlcrc /home/user/.thunderbird/profiles.ini /home/user/.thunderbird/profile.default/user.js /home/user/.config/xfce4/terminal/terminalrc /home/user/.config/xfce4/desktop/icons.screen.latest.rc
-chmod 440 /etc/sudoers /etc/sudoers.d/obscurix-startup
+chmod 440 /etc/sudoers /etc/sudoers.d/*
 chmod 750 /etc/sudoers.d
 
 # Make /etc/resolv.conf immutable.

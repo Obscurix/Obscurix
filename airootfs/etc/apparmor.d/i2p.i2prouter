@@ -1,0 +1,79 @@
+#include <tunables/global>
+
+/home/i2p/i2p/i2prouter flags=(attach_disconnected) {
+  #include <abstractions/base>
+  #include <abstractions/bash>
+  #include <abstractions/user-tmp>
+
+  capability sys_ptrace,
+
+  signal send set=term peer=/home/i2p/i2p/i2prouter//null-/home/i2p/i2p/i2psvc,
+  signal send set=term peer=unconfined,
+
+  /dev/tty rw,
+  /etc/host.conf r,
+  /etc/hosts r,
+  /etc/nsswitch.conf r,
+  /etc/passwd r,
+  /etc/resolv.conf r,
+  /etc/ssl/** r,
+  /etc/java-openjdk/** r,
+
+  /home/i2p/i2p/i2psvc mrix,
+
+  /proc/ r,
+  /proc/meminfo r,
+  /proc/sys/kernel/osrelease r,
+  /proc/sys/kernel/pid_max r,
+  /proc/uptime r,
+
+  /sys/devices/system/cpu/online r,
+  /sys/fs/cgroup/cpu,cpuacct/cpu.cfs_period_us r,
+  /sys/fs/cgroup/cpu,cpuacct/cpu.cfs_quota_us r,
+  /sys/fs/cgroup/cpu,cpuacct/cpu.shares r,
+  /sys/fs/cgroup/memory/user.slice/user-1000.slice/session-1.scope/memory.limit_in_bytes r,
+
+  /usr/bin/bash rix,
+  /usr/bin/cat mrix,
+  /usr/bin/cut mrix,
+  /usr/bin/dbus-send mrix,
+  /usr/bin/dirname mrix,
+  /usr/bin/egrep mrix,
+  /usr/bin/expr mrix,
+  /usr/bin/gawk mrix,
+  /usr/bin/grep mrix,
+  /usr/bin/id mrix,
+  /usr/bin/ldd mrix,
+  /usr/bin/ps mrUx,
+  /usr/bin/rm mrix,
+  /usr/bin/sed mrix,
+  /usr/bin/sleep mrix,
+  /usr/bin/tail mrix,
+  /usr/bin/tr mrix,
+  /usr/bin/uname mrix,
+  /usr/bin/which mrix,
+  /usr/bin/xdg-open mrix,
+  /usr/lib/jvm/java-12-openjdk/bin/java mrix,
+  /usr/lib/ld-2.29.so mrix,
+  /usr/lib/jvm/** mr,
+   
+  owner /home/i2p/.i2p rw,
+  owner /home/i2p/.i2p/** rw,
+  owner /home/i2p/i2p rw,
+  owner /home/i2p/i2p/** rwm,
+
+  owner /persistent_ARCH_*/x86_64/upperdir/home/i2p/.i2p/ r,
+  owner /persistent_ARCH_*/x86_64/upperdir/home/i2p/.i2p/** r,
+  owner /persistent_ARCH_*/x86_64/upperdir/home/i2p/i2p/ r,
+  owner /persistent_ARCH_*/x86_64/upperdir/home/i2p/i2p/** r,
+  
+  owner /proc/*/auxv r,
+  owner /proc/*/cgroup r,
+  owner /proc/*/cmdline r,
+  owner /proc/*/coredump_filter rw,
+  owner /proc/*/fd/ r,
+  owner /proc/*/mountinfo r,
+  owner /proc/*/stat r,
+  owner /proc/*/status r,
+
+}
