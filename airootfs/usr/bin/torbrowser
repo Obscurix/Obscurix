@@ -2,7 +2,22 @@
 
 bwrap \
 --bind /home/user /home/user \
---ro-bind /usr/bin /usr/bin \
+--ro-bind /usr/bin/bash /usr/bin/bash \
+--ro-bind /usr/bin/sh /usr/bin/sh \
+--ro-bind /usr/bin/grep /usr/bin/grep \
+--ro-bind /usr/bin/tail /usr/bin/tail \
+--ro-bind /usr/bin/env /usr/bin/env \
+--ro-bind /usr/bin/gpg /usr/bin/gpg \
+--ro-bind /usr/bin/id /usr/bin/id \
+--ro-bind /usr/bin/readlink /usr/bin/readlink \
+--ro-bind /usr/bin/dirname /usr/bin/dirname \
+--ro-bind /usr/bin/test /usr/bin/test \
+--ro-bind /usr/bin/mkdir /usr/bin/mkdir \
+--ro-bind /usr/bin/ln /usr/bin/ln \
+--ro-bind /usr/bin/sed /usr/bin/sed \
+--ro-bind /usr/bin/cp /usr/bin/cp \
+--ro-bind /usr/bin/rm /usr/bin/rm \
+--ro-bind /usr/bin/getconf /usr/bin/getconf \
 --ro-bind /usr/lib /usr/lib \
 --ro-bind /usr/share /usr/share \
 --symlink /usr/bin /bin \
