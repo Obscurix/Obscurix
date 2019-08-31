@@ -9,6 +9,3 @@ sudo sudo -u freenet /usr/bin/installfreenet
 
 # Don't allow the freenet user to access the X server as it's no longer needed.
 xhost -SI:localuser:freenet >/dev/null
-
-# Force all outgoing traffic through Freenet.
-sudo /usr/lib/obscurix/plug-firewall-freenet
