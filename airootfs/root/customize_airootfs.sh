@@ -149,6 +149,9 @@ SocksPort 9050 IsolateDestAddr IsolateDestPort
 # I2P installation.
 SocksPort 9043
 
+# Freenet installation.
+SocksPort 9062
+
 # Time sync.
 SocksPort 9058
 

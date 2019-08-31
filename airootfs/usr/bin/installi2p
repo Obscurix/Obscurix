@@ -29,8 +29,11 @@ if ! sha256sum /home/i2p/i2pinstall.jar | grep "${i2p_sha256}" >/dev/null; then
   exit 1
 fi
 
-# Run installer. Uses torsocks so files are downloaded through Tor.
-torsocks -a 127.0.0.1 -p 9043 java -jar /home/i2p/i2pinstall.jar
+# Ensure the installer proxies its connections through Tor.
+export JAVA_OPTIONS="$JAVA_OPTIONS -DsocksProxyHost=localhost -DsocksProxyPort=9043"
+
+# Run the installer.
+java -jar /home/i2p/i2pinstall.jar
 
 # Delete installer.
 rm -f /home/i2p/i2pinstall.jar /home/i2p/i2pinstall.jar.sig

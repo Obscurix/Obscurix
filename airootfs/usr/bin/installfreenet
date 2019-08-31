@@ -22,6 +22,9 @@ if ! gpg --status-fd 1 --verify "/home/freenet/new_installer_offline.jar.sig" "/
   exit 1
 fi
 
+# Ensure the installer proxies its connections through Tor.
+export JAVA_OPTIONS="$JAVA_OPTIONS -DsocksProxyHost=localhost -DsocksProxyPort=9062"
+
 # Run installer.
 java -jar /home/freenet/new_installer_offline.jar
 
