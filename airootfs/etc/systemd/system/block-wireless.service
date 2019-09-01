@@ -6,19 +6,19 @@ After=network.target
 [Service]
 Type=oneshot
 ExecStart=/usr/lib/obscurix/block-wireless-devices
-#ProtectSystem=strict
-#ProtectHome=true
-#ProtectKernelTunables=true
-#ProtectKernelModules=true
-#ProtectControlGroups=true
-#PrivateNetwork=true
-#PrivateTmp=true
-#RestrictNamespaces=true
-#MemoryDenyWriteExecute=true
-#NoNewPrivileges=true
-#RestrictRealtime=true
-#RestrictAddressFamilies=AF_INET
-#SystemCallArchitectures=native
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_SYS_MODULE
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+PrivateNetwork=true
+PrivateTmp=true
+RestrictNamespaces=true
+MemoryDenyWriteExecute=true
+NoNewPrivileges=true
+RestrictRealtime=true
+SystemCallArchitectures=native
+SystemCallFilter=wait4 read mmap openat close rt_sigaction fstat mprotect lseek stat getdents64 rt_sigprocmask access newfstatat fcntl brk ioctl arch_prctl munmap getgid getuid sendto geteuid getegid clone socket execve connect write rt_sigreturn uname prlimit64 getpid sysinfo dup2 getppid set_tid_address set_robust_list getpgrp brk getcwd init_module
 
 [Install]
 WantedBy=multi-user.target

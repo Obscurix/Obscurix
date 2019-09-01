@@ -1,0 +1,67 @@
+#include <tunables/global>
+
+/usr/bin/keepassxc flags=(attach_disconnected) {
+  #include <abstractions/base>
+  #include <abstractions/gnome>
+  #include <abstractions/ubuntu-browsers.d/ubuntu-integration>
+
+  /dev/ r,
+  /dev/tty r,
+ 
+  /etc/fstab r,
+  /etc/machine-id r,
+  /etc/nsswitch.conf r,
+  /etc/passwd r,
+ 
+  /persistent_ARCH_*/x86_64/upperdir/usr/share/fonts/ r,
+  /persistent_ARCH_*/x86_64/upperdir/usr/share/fonts/** r,
+ 
+  /proc/*/mountinfo r,
+  /proc/sys/kernel/random/boot_id r,
+ 
+  /sys/bus/ r,
+  /sys/bus/usb/devices/ r,
+  /sys/class/ r,
+  
+  /usr/bin/ r,
+  /usr/bin/keepassxc mr,
+
+  /usr/share/gtk-3.0/settings.ini r,
+  /usr/share/icons/ r,
+  /usr/share/icons/** r,
+
+  /usr/share/keepassxc/** r,
+  /usr/share/mime/mime.cache r,
+  /usr/share/pixmaps/ r,
+ 
+  owner @{HOME}/*.kdbx rw,
+  owner @{HOME}/*.kdbx.* rw,
+
+  owner @{HOME}/.Xauthority r,
+  owner @{HOME}/.bash_logout r,
+  owner @{HOME}/.bash_profile r,
+  owner @{HOME}/.bashrc r,
+
+  owner @{HOME}/.cache/fontconfig/** r,
+  owner @{HOME}/.config/QtProject.conf rw,
+  owner @{HOME}/.config/QtProject.conf.* rw,
+  owner @{HOME}/.config/QtProject.conf.lock rwk,
+  owner @{HOME}/.config/dconf/user r,
+  owner @{HOME}/.config/gtk-3.0/ w,
+
+  owner @{HOME}/.config/keepassxc/ rw,
+  owner @{HOME}/.config/keepassxc/** rwk,
+
+  owner @{HOME}/.icons/ r,
+  owner @{HOME}/.local/share/recently-used.xbel rw,
+  owner @{HOME}/.local/share/recently-used.xbel.* rw,
+  owner @{HOME}/.xinitrc r,
+
+  owner /home/user/ r,
+  owner /persistent_ARCH_*/x86_64/upperdir/home/user/ r,
+
+  owner /proc/*/cmdline r,
+  owner /run/user/1000/ICEauthority r,
+  owner /usr/share/fonts/** rw,
+
+}
