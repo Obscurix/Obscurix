@@ -5,12 +5,19 @@
   #include <abstractions/gnome>
   #include <abstractions/ubuntu-browsers.d/ubuntu-integration>
 
+  # We don't want any network access.
+  deny /etc/host.conf r,
+  deny /etc/resolv.conf r,
+  deny /etc/hosts r,
+  deny /etc/gai.conf r,
+  deny /etc/nsswitch.conf
+  deny network ,
+
   /dev/ r,
   /dev/tty r,
  
   /etc/fstab r,
   /etc/machine-id r,
-  /etc/nsswitch.conf r,
   /etc/passwd r,
  
   /persistent_ARCH_*/x86_64/upperdir/usr/share/fonts/ r,
