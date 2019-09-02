@@ -10,8 +10,8 @@
   deny /etc/resolv.conf r,
   deny /etc/hosts r,
   deny /etc/gai.conf r,
-  deny /etc/nsswitch.conf
-  deny network ,
+  deny /etc/nsswitch.conf r,
+  deny network,
 
   /dev/ r,
   /dev/tty r,
