@@ -1,6 +1,6 @@
 ---
 - apparmor-profiles:
-    - '*'
+    - '/usr/bin/zeronet'
   users:
     - 'zeronet'
   commands:
