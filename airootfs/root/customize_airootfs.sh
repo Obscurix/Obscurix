@@ -204,6 +204,9 @@ sh /root/install-zeronet.sh
 # Install hardened_malloc.
 sh /root/install-hardened-malloc.sh
 
+# Install kloak.
+sh /root/install-kloak.sh
+
 # Disable zeronet.service as it has a dependency on tor.service.
 # It will attempt to start at boot while tor.service is masked which breaks it.
 # It is enabled in obscurix-startup after the user is prompted for bridges.
