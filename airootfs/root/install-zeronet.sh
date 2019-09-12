@@ -15,7 +15,7 @@ mkdir -pm 755 /opt/zeronet
 cp -a "${zeronet_dir}/." "/opt/zeronet/"
 
 wget --https-only https://aur.archlinux.org/cgit/aur.git/plain/zeronet.conf?h=zeronet -O /etc/zeronet.conf
-chmod 644 /etc/zeronet.conf /usr/lib/systemd/system/zeronet.service
+chmod 644 /etc/zeronet.conf
 
 # Configure Zeronet to use Tor. Will give us stream isolation.
 echo "tor = always" | tee -a /etc/zeronet.conf >/dev/null
@@ -51,4 +51,5 @@ chown user -R /home/user/zeronet-browser
 
 # Enable systemd service.
 mv /etc/systemd/system/zeronet.service /usr/lib/systemd/system/zeronet.service
+chmod 644 /usr/lib/systemd/system/zeronet.service
 systemctl enable zeronet.service
