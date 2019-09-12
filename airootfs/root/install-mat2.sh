@@ -20,3 +20,5 @@ python3 -m unittest discover -v
 # Install.
 python setup.py install --root="/" --optimize=1
 
+# Delete source files.
+rm -rf ${mat_dir}

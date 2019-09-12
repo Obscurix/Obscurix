@@ -21,3 +21,6 @@ make
 
 # Copy files.
 install -m755 ${hardened_malloc_dir}/libhardened_malloc.so /usr/lib/libhardened_malloc.so
+
+# Delete source files.
+rm -rf ${hardened_malloc_dir}

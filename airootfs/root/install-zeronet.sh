@@ -3,10 +3,11 @@
 # Install Zeronet.
 zeronet_ver="0.7.1"
 zeronet_dir="/usr/src/ZeroNet-${zeronet_ver}"
+zeronet_archive="/usr/src/zeronet.tar.gz"
 
 # Download and extract source.
-scurl-download https://github.com/HelloZeroNet/ZeroNet/archive/v${zeronet_ver}.tar.gz -o /usr/src/zeronet.tar.gz
-tar -xf /usr/src/zeronet.tar.gz -C /usr/src
+scurl-download https://github.com/HelloZeroNet/ZeroNet/archive/v${zeronet_ver}.tar.gz -o ${zeronet_archive}
+tar -xf ${zeronet_archive} -C /usr/src
 
 # Create needed directory.
 mkdir -pm 755 /opt/zeronet
@@ -53,3 +54,6 @@ chown user -R /home/user/zeronet-browser
 mv /etc/systemd/system/zeronet.service /usr/lib/systemd/system/zeronet.service
 chmod 644 /usr/lib/systemd/system/zeronet.service
 systemctl enable zeronet.service
+
+# Delete source files.
+rm -rf ${zeronet_dir} ${zeronet_archive}
