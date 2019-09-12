@@ -12,16 +12,6 @@ if [ -d /home/freenet/Freenet ]; then
   exit 1
 fi
 
-
-# Import I2P signing key.
-curl https://freenetproject.org/assets/keyring.gpg | gpg --import
-
-# Verify with GPG.
-if ! gpg --status-fd 1 --verify "/home/freenet/new_installer_offline.jar.sig" "/home/freenet/new_installer_offline.jar" &>/dev/null; then
-  echo "ERROR: FREENET INSTALLER CANNOT BE VERIFIED WITH GPG."
-  exit 1
-fi
-
 # Ensure the installer proxies its connections through Tor.
 export JAVA_OPTIONS="$JAVA_OPTIONS -DsocksProxyHost=localhost -DsocksProxyPort=9062"
 

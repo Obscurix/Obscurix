@@ -101,10 +101,26 @@ useradd -m i2p
 
 # Download I2P.
 i2p_ver="0.9.41"
+i2p_sha256="3faf1c24c776375694d5f70c53c795ef73e00b21cd4b931ee62b1299b7073fc4"
 
 scurl-download https://download.i2p2.de/releases/${i2p_ver}/i2pinstall_${i2p_ver}.jar -o /home/i2p/i2pinstall.jar
 scurl-download https://download.i2p2.de/releases/${i2p_ver}/i2pinstall_${i2p_ver}.jar.sig -o /home/i2p/i2pinstall.jar.sig
 chown i2p /home/i2p/i2pinstall.jar /home/i2p/i2pinstall.jar.sig
+
+# Import I2P signing key.
+scurl https://geti2p.net/_static/zzz.key.asc | gpg --import
+
+# Verify with GPG.
+if ! gpg --status-fd 1 --verify "/home/i2p/i2pinstall.jar.sig" "/home/i2p/i2pinstall.jar" &>/dev/null; then
+  echo "ERROR: I2P INSTALLER CANNOT BE VERIFIED WITH GPG."
+  exit 1
+fi
+
+# Verify checksums.
+if ! sha256sum /home/i2p/i2pinstall.jar | grep "${i2p_sha256}" >/dev/null; then
+  echo "ERROR: I2P INSTALLER CANNOT BE VERIFIED WITH SHA256."
+  exit 1
+fi
 
 # Create Freenet user.
 useradd -m freenet
@@ -115,6 +131,15 @@ freenet_ver="1484"
 scurl-download https://github.com/freenet/fred/releases/download/build0${freenet_ver}/new_installer_offline_${freenet_ver}.jar -o /home/freenet/new_installer_offline.jar
 scurl-download https://github.com/freenet/fred/releases/download/build0${freenet_ver}/new_installer_offline_${freenet_ver}.jar.sig -o /home/freenet/new_installer_offline.jar.sig
 chown user /home/freenet/new_installer_offline.jar /home/freenet/new_installer_offline.jar.sig
+
+# Import Freenet signing key.
+scurl https://freenetproject.org/assets/keyring.gpg | gpg --import
+
+# Verify with GPG.
+if ! gpg --status-fd 1 --verify "/home/freenet/new_installer_offline.jar.sig" "/home/freenet/new_installer_offline.jar" &>/dev/null; then
+  echo "ERROR: FREENET INSTALLER CANNOT BE VERIFIED WITH GPG."
+  exit 1
+fi
 
 # Lock the root account.
 passwd -l root

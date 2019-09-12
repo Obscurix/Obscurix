@@ -1,7 +1,5 @@
 #!/bin/bash
 
-i2p_sha256="3faf1c24c776375694d5f70c53c795ef73e00b21cd4b931ee62b1299b7073fc4"
-
 # Check if installer exists.
 if ! [ -f /home/i2p/i2pinstall.jar ]; then
   echo "ERROR: I2P INSTALLER HAS NOT BEEN DOWNLOADED"
@@ -11,21 +9,6 @@ fi
 # Check if already installed.
 if [ -d /home/i2p/i2p ]; then
   echo "ERROR: I2P HAS ALREADY BEEN INSTALLED"
-  exit 1
-fi
-
-# Import I2P signing key.
-curl https://geti2p.net/_static/zzz.key.asc | gpg --import
-
-# Verify with GPG.
-if ! gpg --status-fd 1 --verify "/home/i2p/i2pinstall.jar.sig" "/home/i2p/i2pinstall.jar" &>/dev/null; then
-  echo "ERROR: I2P INSTALLER CANNOT BE VERIFIED WITH GPG."
-  exit 1
-fi
-
-# Verify checksums.
-if ! sha256sum /home/i2p/i2pinstall.jar | grep "${i2p_sha256}" >/dev/null; then
-  echo "ERROR: I2P INSTALLER CANNOT BE VERIFIED WITH SHA256"
   exit 1
 fi
 
