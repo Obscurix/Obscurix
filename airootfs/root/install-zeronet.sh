@@ -5,7 +5,7 @@ zeronet_ver="0.7.1"
 zeronet_dir="/usr/src/ZeroNet-${zeronet_ver}"
 
 # Download and extract source.
-wget --https-only https://github.com/HelloZeroNet/ZeroNet/archive/v${zeronet_ver}.tar.gz -O /usr/src/zeronet.tar.gz
+scurl-download https://github.com/HelloZeroNet/ZeroNet/archive/v${zeronet_ver}.tar.gz -o /usr/src/zeronet.tar.gz
 tar -xf /usr/src/zeronet.tar.gz -C /usr/src
 
 # Create needed directory.
@@ -14,7 +14,7 @@ mkdir -pm 755 /opt/zeronet
 # Copy needed files.
 cp -a "${zeronet_dir}/." "/opt/zeronet/"
 
-wget --https-only https://aur.archlinux.org/cgit/aur.git/plain/zeronet.conf?h=zeronet -O /etc/zeronet.conf
+scurl-download https://aur.archlinux.org/cgit/aur.git/plain/zeronet.conf?h=zeronet -o /etc/zeronet.conf
 chmod 644 /etc/zeronet.conf
 
 # Configure Zeronet to use Tor. Will give us stream isolation.

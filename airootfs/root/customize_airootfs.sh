@@ -22,7 +22,8 @@ systemctl enable pacman-init.service # choose-mirror.service
 systemctl set-default graphical.target
 
 # Configure Pacman mirrors.
-curl "https://www.archlinux.org/mirrorlist/?country=all&protocol=https&ip_version=4" > /etc/pacman.d/mirrorlist
+scurl-download "https://www.archlinux.org/mirrorlist/?country=all&protocol=https&ip_version=4" -o /etc/pacman.d/mirrorlist
+chmod 644 /etc/pacman.d/mirrorlist
 sed -i 's/#Server/Server/g' /etc/pacman.d/mirrorlist
 
 # Create new user.
@@ -101,8 +102,8 @@ useradd -m i2p
 # Download I2P.
 i2p_ver="0.9.41"
 
-wget --https-only https://download.i2p2.de/releases/${i2p_ver}/i2pinstall_${i2p_ver}.jar -O /home/i2p/i2pinstall.jar
-wget --https-only https://download.i2p2.de/releases/${i2p_ver}/i2pinstall_${i2p_ver}.jar.sig -O /home/i2p/i2pinstall.jar.sig
+scurl-download https://download.i2p2.de/releases/${i2p_ver}/i2pinstall_${i2p_ver}.jar -o /home/i2p/i2pinstall.jar
+scurl-download https://download.i2p2.de/releases/${i2p_ver}/i2pinstall_${i2p_ver}.jar.sig -o /home/i2p/i2pinstall.jar.sig
 chown i2p /home/i2p/i2pinstall.jar /home/i2p/i2pinstall.jar.sig
 
 # Create Freenet user.
@@ -111,8 +112,8 @@ useradd -m freenet
 # Download Freenet.
 freenet_ver="1484"
 
-wget --https-only https://github.com/freenet/fred/releases/download/build0${freenet_ver}/new_installer_offline_${freenet_ver}.jar -O /home/freenet/new_installer_offline.jar
-wget --https-only https://github.com/freenet/fred/releases/download/build0${freenet_ver}/new_installer_offline_${freenet_ver}.jar.sig -O /home/freenet/new_installer_offline.jar.sig
+scurl-download https://github.com/freenet/fred/releases/download/build0${freenet_ver}/new_installer_offline_${freenet_ver}.jar -o /home/freenet/new_installer_offline.jar
+scurl-download https://github.com/freenet/fred/releases/download/build0${freenet_ver}/new_installer_offline_${freenet_ver}.jar.sig -o /home/freenet/new_installer_offline.jar.sig
 chown user /home/freenet/new_installer_offline.jar /home/freenet/new_installer_offline.jar.sig
 
 # Lock the root account.

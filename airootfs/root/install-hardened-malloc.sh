@@ -8,7 +8,7 @@ git clone https://github.com/GrapheneOS/hardened_malloc ${hardened_malloc_dir}
 cd ${hardened_malloc_dir}
 
 # Import Daniel Micay's GPG key.
-curl https://github.com/thestinger.gpg | gpg --import
+scurl https://github.com/thestinger.gpg | gpg --import
 
 # Verify hardened_malloc.
 if ! git tag --verify 1 &>/dev/null; then
