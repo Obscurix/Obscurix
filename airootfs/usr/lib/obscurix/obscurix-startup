@@ -4,7 +4,7 @@ set_tor_bridge() {
   # Ask if the user needs to use a bridge.
   if zenity --question --no-wrap --text="Do you need to use a Tor bridge to connect to the Tor network?
 These are used if your ISP (Internet Service Provider) blocks access to the Tor network."; then
- 
+
     # Use a bridge the user knows.
     bridge_info=$(zenity --entry --text="Please enter the bridge information.")
     echo "
@@ -48,7 +48,7 @@ tor_check() {
 # Change the keymap.
 get_keymap() {
   selected_keymap=$(zenity --entry --text="What layout do you want to use? (default: US)")
-  
+
   # Run again if the user enters an invalid keymap.
   for i in $(find /usr/share/kbd/keymaps/ -type f | awk -F"/" '{print $NF}' | sed -e 's/.map.gz//g')
   do
@@ -67,7 +67,7 @@ get_keymap() {
 set_keymap() {
   if zenity --question --no-wrap --text="Do you want to change the keyboard layout? The default layout is US."; then
     get_keymap
-    
+
     selected_keymap_x11="${selected_keymap}"
 
     # setxkbmap can't take "uk" but can take "gb".
@@ -75,11 +75,11 @@ set_keymap() {
     if [ "${selected_keymap_x11}" = "uk" ]; then
       selected_keymap_x11="gb"
     fi
-    
+
     # Sets the new keymap for the current X session and console.
     loadkeys "${selected_keymap}"
     setxkbmap "${selected_keymap_x11}"
-    
+
     zenity --info --width=600 --text="The keyboard layout has been changed to '${selected_keymap}'. If this is an error, go to Applications -> Settings -> Keyboard -> Layout and change it."
   fi
 }
@@ -91,8 +91,21 @@ setup_audio() {
   amixer sset Headphone unmute
 }
 
+update_check() {
+  # Check for an update.
+  new_ver="$(scurl -s https://obscurix.github.io/update_check.txt)"
+  current_ver="0.2"
+
+  if ! [ "${new_ver}" = "${current_ver}" ]; then
+    zenity --info --no-wrap --text="A new update is available. Please update to the latest version."
+  else
+    zenity --info --no-wrap --text="Everything is up to date!"
+  fi
+}
+
 set_tor_bridge
 start_tor
 tor_check
 set_keymap
 setup_audio
+update_check
