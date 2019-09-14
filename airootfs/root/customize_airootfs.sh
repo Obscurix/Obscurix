@@ -199,7 +199,7 @@ systemctl enable iptables.service block-wireless.service macspoof.service Networ
 systemctl mask tor.service
 
 # Pacman stream isolation.
-sed -i 's/#XferCommand = \/usr\/bin\/wget --passive-ftp -c -O %o %u/XferCommand = \/usr\/bin\/curl --socks5-hostname localhost:9060 --continue-at - --fail --output %o %u/' /etc/pacman.conf
+sed -i 's/#XferCommand = \/usr\/bin\/wget --passive-ftp -c -O %o %u/XferCommand = \/usr\/bin\/scurl --socks5-hostname localhost:9060 --continue-at - --fail --output %o %u/' /etc/pacman.conf
 
 # Remove dhcpcd to reduce attack surface. NetworkManager has its own dhcp client.
 pacman -Rn --noconfirm dhcpcd
