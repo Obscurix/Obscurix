@@ -14,7 +14,7 @@ install -m644 ${kloak_dir}/etc/apparmor.d/usr.sbin.kloak /etc/apparmor.d/usr.bin
 
 # We don't use /usr/sbin or local AppArmor files.
 sed -i 's/\/usr\/sbin\/kloak/\/usr\/bin\/kloak/g' /lib/systemd/system/kloak.service
-sed -i s/\/usr\/sbin\/kloak/\/usr\/bin\/kloak/g' /etc/apparmor.d/usr.bin.kloak
+sed -i 's/\/usr\/sbin\/kloak/\/usr\/bin\/kloak/g' /etc/apparmor.d/usr.bin.kloak
 sed -i 's/#include <local\/usr.sbin.kloak>//' /etc/apparmor.d/usr.bin.kloak
 
 # Enable the systemd service.
