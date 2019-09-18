@@ -14,6 +14,8 @@ scurl https://github.com/thestinger.gpg | gpg --import
 if ! git tag --verify 1 &>/dev/null; then
   echo "ERROR: HARDENED_MALLOC CANNOT BE VERIFIED."
   exit 1
+else
+  echo "HARDENED_MALLOC WAS SUCESSFULLY VERIFIED."
 fi
 
 # Compile hardened_malloc.

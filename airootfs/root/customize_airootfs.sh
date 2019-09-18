@@ -114,13 +114,18 @@ scurl https://geti2p.net/_static/zzz.key.asc | gpg --import
 if ! gpg --status-fd 1 --verify "/home/i2p/i2pinstall.jar.sig" "/home/i2p/i2pinstall.jar" &>/dev/null; then
   echo "ERROR: I2P INSTALLER CANNOT BE VERIFIED WITH GPG."
   exit 1
+else
+  echo "I2P WAS SUCCESSFULLY VERIFIED WITH GPG."
 fi
 
 # Verify checksums.
 if ! sha256sum /home/i2p/i2pinstall.jar | grep "${i2p_sha256}" >/dev/null; then
   echo "ERROR: I2P INSTALLER CANNOT BE VERIFIED WITH SHA256."
   exit 1
+else
+  echo "I2P WAS SUCCESSFULLY VERIFIED WITH SHA256."
 fi
+
 
 # Create Freenet user.
 useradd -m freenet
@@ -139,6 +144,8 @@ scurl https://freenetproject.org/assets/keyring.gpg | gpg --import
 if ! gpg --status-fd 1 --verify "/home/freenet/new_installer_offline.jar.sig" "/home/freenet/new_installer_offline.jar" &>/dev/null; then
   echo "ERROR: FREENET INSTALLER CANNOT BE VERIFIED WITH GPG."
   exit 1
+else
+  echo "FREENET WAS SUCCESSFULLY VERIFIED WITH GPG."
 fi
 
 # Lock the root account.
