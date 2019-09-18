@@ -9,7 +9,7 @@ git clone https://github.com/vmonaco/kloak ${kloak_dir}
 cd ${kloak_dir}
 make all
 install -m744 ${kloak_dir}/kloak /usr/bin/kloak
-install -m744 ${kloak_dir}/lib/systemd/system/kloak.service /lib/systemd/system/kloak.service
+install -m644 ${kloak_dir}/lib/systemd/system/kloak.service /lib/systemd/system/kloak.service
 install -m644 ${kloak_dir}/etc/apparmor.d/usr.sbin.kloak /etc/apparmor.d/usr.bin.kloak
 
 # We don't use /usr/sbin or local AppArmor files.
