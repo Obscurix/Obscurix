@@ -30,6 +30,13 @@ profile thunderbird /usr/lib/thunderbird/thunderbird{,-bin} {
   #include <abstractions/ubuntu-browsers.d/java>
   #include <abstractions/ubuntu-helpers>
 
+  owner /run/user/1000/ICEauthority r,
+  owner @{HOME}/.mozilla/** rw,
+  owner /usr/share/fonts/** rw,
+  owner @{HOME}/.config/glib-2.0/ rw,
+  owner @{HOME}/.config/glib-2.0/** rw,
+  owner /dev/shm/org.mozilla.ipc.* rw,
+
   # Backported from the mesa abstraction, available in AppArmor >2.13
   # System files
   /dev/dri/ r, # libGLX_mesa.so calls drmGetDevice2()
