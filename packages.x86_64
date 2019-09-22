@@ -83,3 +83,4 @@ base-devel
 alsa-utils
 
 youtube-dl
+checksec
