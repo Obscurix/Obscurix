@@ -22,7 +22,7 @@ java -jar /home/i2p/i2pinstall.jar
 rm -f /home/i2p/i2pinstall.jar /home/i2p/i2pinstall.jar.sig
 
 # Check if I2P has been installed correctly.
-if [ -d /home/i2p/i2p ]; then
+if [ -f /home/i2p/i2p/i2prouter ]; then
   echo "I2P HAS BEEN INSTALLED"
   
   # Create a statefile so the browser script knows I2P has been installed.
