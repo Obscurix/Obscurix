@@ -72,6 +72,7 @@
 
   /usr/share/applications/mimeinfo.cache r,
   /usr/share/applications/ r,
+  /usr/share/applications/*.desktop r,
   
   /usr/share/GeoIP/GeoIP.dat r,
   /usr/share/GeoIP/GeoIPv6.dat r,
