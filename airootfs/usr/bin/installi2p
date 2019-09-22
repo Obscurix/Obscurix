@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# Check if installer exists.
-if ! [ -f /home/i2p/i2pinstall.jar ]; then
-  echo "ERROR: I2P INSTALLER HAS NOT BEEN DOWNLOADED"
-  exit 1
-fi
-
 # Check if already installed.
 if [ -d /home/i2p/i2p ]; then
   echo "ERROR: I2P HAS ALREADY BEEN INSTALLED"
+  exit 1
+fi
+
+# Check if installer exists.
+if ! [ -f /home/i2p/i2pinstall.jar ]; then
+  echo "ERROR: I2P INSTALLER HAS NOT BEEN DOWNLOADED"
   exit 1
 fi
 
