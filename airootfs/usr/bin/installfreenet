@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# Check if installer exists.
-if ! [ -f /home/freenet/new_installer_offline.jar ]; then
-  echo "ERROR: THE FREENET INSTALLER HAS NOT BEEN DOWNLOADED"
-  exit 1
-fi
-
 # Check if already installed.
 if [ -d /home/freenet/Freenet ]; then
   echo "ERROR: FREENET HAS ALREADY BEEN INSTALLED"
+  exit 1
+fi
+
+# Check if installer exists.
+if ! [ -f /home/freenet/new_installer_offline.jar ]; then
+  echo "ERROR: THE FREENET INSTALLER HAS NOT BEEN DOWNLOADED"
   exit 1
 fi
 
