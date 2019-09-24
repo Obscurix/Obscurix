@@ -19,8 +19,14 @@ Bridge ${bridge_info}" | tee -a /etc/tor/torrc >/dev/null
 
 start_tor() {
   # Start Tor.
-  mkdir -m 700 /run/tor # Needed for onion-grater's ControlSocket.
-  chown tor:tor -R /run/tor
+  if ! [ -d /run/tor ]; then
+    mkdir -m 700 /run/tor # Needed for onion-grater's ControlSocket.
+  fi
+  
+  if ! [ "$(stat -c %G /run/tor)" = "tor" ]; then
+    chown tor:tor -R /run/tor
+  fi
+
   systemctl unmask tor.service
   systemctl enable --now tor.service
 
