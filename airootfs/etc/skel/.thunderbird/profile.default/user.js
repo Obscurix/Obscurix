@@ -1,7 +1,7 @@
 // User.js file for Thunderbird hardening.
 
 // Explanation of most settings can be found here https://theprivacyguide1.github.io/about_config.html.
-// Explanations for other settings are at the link at the bottom.
+// Some have also been taken from here https://git-tails.immerda.ch/tails/plain/config/chroot_local-includes/etc/thunderbird/pref/thunderbird.js
 
 // General privacy settings
 user_pref("media.peerconnection.enabled", false);
@@ -17,10 +17,8 @@ user_pref("media.navigator.enabled", false);
 user_pref("webgl.disabled", true);
 user_pref("browser.browser.sessionstore.privacy_level", 2); 
 user_pref("network.IDN_show_punycode", true);
-user_pref("extensions.blocklist.url", "https://blocklists.settings.services.mozilla.com/v1/blocklist/3/%20/%20/");
 user_pref("dom.event.contextmenu.enabled", false);
 user_pref("network.http.referer.spoofSource", true);
-user_pref("privacy.trackingprotection.enabled", false); // (Tracking protection is useless with UBO)
 
 // Always use private browsing
 user_pref("browser.privatebrowsing.autostart", true);
@@ -81,8 +79,8 @@ user_pref("datareporting.healthreport.uploadEnabled", false);
 user_pref("datareporting.policy.firstRunURL", ""); 
 user_pref("toolkit.telemetry.cachedClientID", "");
 user_pref("toolkit.telemetry.infoURL", "");
-pref("toolkit.telemetry.prompted", 2);
-pref("toolkit.telemetry.rejected", true);
+user_pref("toolkit.telemetry.prompted", 2);
+user_pref("toolkit.telemetry.rejected", true);
 
 // Disable possible telemetry
 user_pref("browser.aboutHomeSnippets.updateUrL", "");
@@ -164,3 +162,10 @@ user_pref("mail.chat.enabled", false);
 // Hide the "Know your rights" message
 user_pref("mail.rights.version", 1);
 
+// Disable mail checking
+user_pref("mail.shell.checkDefaultMail", false);
+
+// Don't decrypt subordinate message parts that otherwise might reveal
+// decrypted content to an attacker
+// See https://www.thunderbird.net/en-US/thunderbird/52.9.1/releasenotes/
+user_pref("mailnews.p7m_subparts_external", true);
