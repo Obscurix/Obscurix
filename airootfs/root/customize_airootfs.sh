@@ -285,3 +285,11 @@ for i in ping rsh rlogin rcp
 do
   setcap -r "/usr/bin/${i}"
 done
+
+# Starting VLC from the applications menu will make it run
+# /usr/bin/vlc but we want it to run the first in $PATH
+# (/usr/local/bin/vlc) instead for the sandboxing.
+sed -i 's/\/usr\/bin\/vlc/vlc/g' /usr/share/applications/vlc.desktop
+
+# Same as VLC except we want profile.default.
+sed -i 's/\/usr\/lib\/thunderbird\/thunderbird/thunderbird/g' /usr/share/applications/thunderbird.desktop
