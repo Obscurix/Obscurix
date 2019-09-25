@@ -20,3 +20,20 @@ case ${TERM} in
 esac
 
 [ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
+
+su() {
+  ## su won't work as the root account is locked and
+  ## su is restricted to only users within the wheel group.
+  
+  if [ "$(id -u)" = "1000" ] && if ! grep "rootpw" /proc/cmdline; then
+    echo "su is disabled. Boot with the 'rootpw' boot parameter to use it."
+  fi
+}
+
+sudo() {
+  ## sudo also won't work.
+  
+  if [ "$(id -u)" = "1000" ] && if ! grep "rootpw" /proc/cmdline; then
+    echo "sudo is disabled. Boot with the 'rootpw' boot parameter to use it."
+  fi
+}
