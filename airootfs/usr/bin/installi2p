@@ -28,9 +28,9 @@ if [ -f /home/i2p/i2p/i2prouter ]; then
   # Create a statefile so the browser script knows I2P has been installed.
   touch /tmp/i2p_installed
   chmod 644 /tmp/i2p_installed
+
+  # Start I2P.
+  /home/i2p/i2p/i2prouter start
 else
   echo "ERROR: I2P HAS NOT BEEN INSTALLED"
 fi
-
-# Start I2P.
-/home/i2p/i2p/i2prouter start
