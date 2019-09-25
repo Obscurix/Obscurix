@@ -1,2 +1,11 @@
 @{torbrowser_installation_dir}=@{HOME}/tor-browser_en-US
 @{torbrowser_home_dir}=@{torbrowser_installation_dir}/Browser
+
+@{freenetbrowser_installation_dir}=@{HOME}/freenet-browser
+@{freenetbrowser_home_dir}=@{freenetbrowser_installation_dir}/Browser
+
+@{i2pbrowser_installation_dir}=@{HOME}/i2p-browser
+@{i2pbrowser_home_dir}=@{i2pbrowser_installation_dir}/Browser
+
+@{zeronetbrowser_installation_dir}=@{HOME}/zeronet-browser
+@{zeronetbrowser_home_dir}=@{zeronetbrowser_installation_dir}/Browser

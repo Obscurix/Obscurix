@@ -1,2 +1,0 @@
-@{i2pbrowser_installation_dir}=@{HOME}/i2p-browser
-@{i2pbrowser_home_dir}=@{i2pbrowser_installation_dir}/Browser

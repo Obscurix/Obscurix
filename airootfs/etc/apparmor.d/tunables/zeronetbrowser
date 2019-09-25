@@ -1,2 +1,0 @@
-@{zeronetbrowser_installation_dir}=@{HOME}/zeronet-browser
-@{zeronetbrowser_home_dir}=@{zeronetbrowser_installation_dir}/Browser

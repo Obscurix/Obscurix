@@ -1,5 +1,5 @@
 #include <tunables/global>
-#include <tunables/zeronetbrowser>
+#include <tunables/torbrowser>
 
 /home/user/zeronet-browser/Browser/firefox.real flags=(attach_disconnected) {
   #include <abstractions/gnome>
