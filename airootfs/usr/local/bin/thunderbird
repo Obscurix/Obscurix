@@ -1,3 +1,3 @@
 #!/bin/bash
 
-/usr/bin/thunderbird --profile "profile.default"
+/usr/bin/thunderbird --profile "/home/user/.thunderbird/profile.default"
