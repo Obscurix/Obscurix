@@ -25,7 +25,7 @@ su() {
   ## su won't work as the root account is locked and
   ## su is restricted to only users within the wheel group.
   
-  if [ "$(id -u)" = "1000" ] && if ! grep "rootpw" /proc/cmdline; then
+  if [ "$(id -u)" = "1000" ] && ! grep "rootpw" /proc/cmdline &>/dev/null; then
     echo "su is disabled. Boot with the 'rootpw' boot parameter to use it."
   fi
 }
@@ -33,7 +33,7 @@ su() {
 sudo() {
   ## sudo also won't work.
   
-  if [ "$(id -u)" = "1000" ] && if ! grep "rootpw" /proc/cmdline; then
+  if [ "$(id -u)" = "1000" ] && ! grep "rootpw" /proc/cmdline &>/dev/null; then
     echo "sudo is disabled. Boot with the 'rootpw' boot parameter to use it."
   fi
 }
