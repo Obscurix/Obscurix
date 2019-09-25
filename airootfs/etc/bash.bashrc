@@ -28,7 +28,7 @@ su() {
   if [ "$(id -u)" = "1000" ] && ! grep "rootpw" /proc/cmdline &>/dev/null; then
     echo "su is disabled. Boot with the 'rootpw' boot parameter to use it."
   else
-     /usr/bin/su "{@}"
+     /usr/bin/su "${@}"
   fi
 }
 
@@ -38,6 +38,6 @@ sudo() {
   if [ "$(id -u)" = "1000" ] && ! grep "rootpw" /proc/cmdline &>/dev/null; then
     echo "sudo is disabled. Boot with the 'rootpw' boot parameter to use it."
   else
-    /usr/bin/sudo "{@}"
+    /usr/bin/sudo "${@}"
   fi
 }
