@@ -188,6 +188,9 @@ SocksPort 9062
 # Time sync.
 SocksPort 9058
 
+# GnuPG.
+SocksPort 9042 IsolateDestAddr IsolateDestPort
+
 # Use less disk writes.
 AvoidDiskWrites 1
 
