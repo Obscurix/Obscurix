@@ -186,7 +186,7 @@ SocksPort 9043
 SocksPort 9062
 
 # Time sync.
-SocksPort 9058
+SocksPort 9058 IsolateDestAddr IsolateDestPort
 
 # GnuPG.
 SocksPort 9042 IsolateDestAddr IsolateDestPort
