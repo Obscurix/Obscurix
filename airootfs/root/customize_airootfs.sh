@@ -126,6 +126,16 @@ else
   echo "I2P WAS SUCCESSFULLY VERIFIED WITH SHA256."
 fi
 
+# Install I2P.
+sudo -u i2p java -jar /home/i2p/i2pinstall.jar -console <<EOF
+0
+1
+1
+/home/i2p/i2p
+O
+1
+1
+EOF
 
 # Create Freenet user.
 useradd -m freenet
@@ -135,7 +145,7 @@ freenet_ver="1484"
 
 scurl-download https://github.com/freenet/fred/releases/download/build0${freenet_ver}/new_installer_offline_${freenet_ver}.jar -o /home/freenet/new_installer_offline.jar
 scurl-download https://github.com/freenet/fred/releases/download/build0${freenet_ver}/new_installer_offline_${freenet_ver}.jar.sig -o /home/freenet/new_installer_offline.jar.sig
-chown user /home/freenet/new_installer_offline.jar /home/freenet/new_installer_offline.jar.sig
+chown freenet /home/freenet/new_installer_offline.jar /home/freenet/new_installer_offline.jar.sig
 
 # Import Freenet signing key.
 scurl https://freenetproject.org/assets/keyring.gpg | gpg --import
@@ -147,6 +157,15 @@ if ! gpg --status-fd 1 --verify "/home/freenet/new_installer_offline.jar.sig" "/
 else
   echo "FREENET WAS SUCCESSFULLY VERIFIED WITH GPG."
 fi
+
+# Install Freenet.
+sudo -u freenet java -jar /home/freenet/new_installer_offline.jar -console <<EOF
+/home/freenet/Freenet
+1
+EOF
+
+# Freenet autostarts which we don't want at this stage.
+/home/freenet/Freenet/run.sh stop
 
 # Lock the root account.
 passwd -l root
