@@ -100,8 +100,8 @@ rm /home/user/tor-browser-linux64-*_en-US.tar.xz
 useradd -m i2p
 
 # Download I2P.
-i2p_ver="0.9.41"
-i2p_sha256="3faf1c24c776375694d5f70c53c795ef73e00b21cd4b931ee62b1299b7073fc4"
+i2p_ver="0.9.42"
+i2p_sha256="cb192e48c5f06839c99b71861364f3a9117b6b24f78f7f7c25d6716507c81bdf"
 
 scurl-download https://download.i2p2.de/releases/${i2p_ver}/i2pinstall_${i2p_ver}.jar -o /home/i2p/i2pinstall.jar
 scurl-download https://download.i2p2.de/releases/${i2p_ver}/i2pinstall_${i2p_ver}.jar.sig -o /home/i2p/i2pinstall.jar.sig
