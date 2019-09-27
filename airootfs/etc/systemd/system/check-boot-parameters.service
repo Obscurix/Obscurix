@@ -1,5 +1,8 @@
 [Unit]
 Description=Checks for custom boot parameters
+Before=zeronet.service
+Before=i2p.service
+Before=freenet.service
 
 [Service]
 ExecStart=/usr/lib/obscurix/boot-parameters

@@ -72,6 +72,14 @@ disable_zeronet() {
   systemctl mask --now zeronet.service
 }
 
+disable_i2p() {
+  systemctl mask --now i2p.service
+}
+
+disable_freenet() {
+  systemctl mask --now freenet.service
+}
+
 if grep "notor" /proc/cmdline; then
   disable_tor
 fi
@@ -102,4 +110,12 @@ fi
 
 if grep "nozeronet" /proc/cmdline; then
   disable_zeronet
+fi
+
+if grep "noi2p" /proc/cmdline; then
+  disable_i2p
+fi
+
+if grep "nofreenet" /proc/cmdline; then
+  disable_freenet
 fi
