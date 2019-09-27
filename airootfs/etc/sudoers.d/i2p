@@ -1,1 +1,0 @@
-user ALL=NOPASSWD: /usr/bin/sudo -u i2p /usr/bin/installi2p
