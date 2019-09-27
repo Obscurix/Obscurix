@@ -244,7 +244,7 @@ CookieAuthentication 1
 CookieAuthFile /run/tor/control.authcookie" | tee -a /etc/tor/torrc >/dev/null
 
 # Enable systemd services.
-systemctl enable iptables.service block-wireless.service macspoof.service NetworkManager.service dnsmasq.service check-boot-parameters.service apparmor.service secure-time-sync.service onion-grater.service
+systemctl enable iptables.service block-wireless.service macspoof.service NetworkManager.service dnsmasq.service check-boot-parameters.service apparmor.service secure-time-sync.service onion-grater.service i2p.service freenet.service
 
 # Disable tor.service so the Tor daemon does not start before the user has been asked for bridges.
 systemctl mask tor.service

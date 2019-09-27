@@ -1,0 +1,11 @@
+[Unit]
+Description=Peer-to-peer platform for censorship-resistant communication
+After=network.target
+
+[Service]
+ExecStart=/home/freenet/Freenet/run.sh start
+User=freenet
+Group=freenet
+
+[Install]
+WantedBy=default.target
