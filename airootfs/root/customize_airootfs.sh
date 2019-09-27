@@ -197,6 +197,10 @@ else
   exit 1
 fi
 
+# Move I2P/Freenet systemd services.
+mv /etc/systemd/system/i2p.service /lib/systemd/system/i2p.service
+mv /etc/systemd/system/freenet.service /lib/systemd/system/freenet.service
+
 # Lock the root account.
 passwd -l root
 
