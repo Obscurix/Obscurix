@@ -1,10 +1,5 @@
 #!/bin/bash
 
-if ! [ -f /tmp/freenet_installed ]; then
-  zenity --error --text="Freenet has not been installed. Run 'installfreenet' in a terminal to install it." --no-wrap
-  exit 1
-fi
-
 bwrap \
 --bind /home/user /home/user \
 --ro-bind /usr/bin/bash /usr/bin/bash \

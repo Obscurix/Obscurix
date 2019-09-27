@@ -137,6 +137,17 @@ O
 1
 EOF
 
+# Delete installer.
+rm -f /home/i2p/i2pinstall.jar /home/i2p/i2pinstall.jar.sig
+
+# Check if I2P has been installed correctly.
+if [ -f /home/i2p/i2p/i2prouter ]; then
+  echo "I2P HAS BEEN INSTALLED"
+else
+  echo "ERROR: I2P HAS NOT BEEN INSTALLED"
+  exit 1
+fi
+
 # Create Freenet user.
 useradd -m freenet
 
@@ -166,6 +177,17 @@ EOF
 
 # Freenet autostarts which we don't want at this stage.
 /home/freenet/Freenet/run.sh stop
+
+# Delete installer and signature.
+rm -f /home/freenet/new_installer_offline.jar /home/freenet/new_installer_offline.jar.sig
+
+# Check if Freenet has been installed correctly.
+if [ -d /home/freenet/Freenet ]; then
+  echo "FREENET HAS BEEN INSTALLED"
+else
+  echo "ERROR: FREENET HAS NOT BEEN INSTALLED"
+  exit 1
+fi
 
 # Lock the root account.
 passwd -l root
