@@ -3,6 +3,7 @@ Description=Peer-to-peer platform for censorship-resistant communication
 After=network.target
 
 [Service]
+Type=forking
 ExecStart=/home/freenet/Freenet/run.sh start
 User=freenet
 Group=freenet
