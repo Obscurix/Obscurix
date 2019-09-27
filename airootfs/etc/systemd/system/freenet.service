@@ -7,6 +7,7 @@ Type=forking
 ExecStart=/home/freenet/Freenet/run.sh start
 User=freenet
 Group=freenet
+KillSignal=SIGKILL
 
 [Install]
 WantedBy=default.target
