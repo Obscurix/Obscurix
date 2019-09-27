@@ -31,7 +31,7 @@ useradd -m -s /bin/bash user
 echo "user:password" | chpasswd
 
 # Fix permissions.
-chmod 755 /etc/ /etc/profile.d/ /etc/iptables/ /etc/apparmor.d/ /etc/apparmor.d/abstractions/ /home/user/.config/ /home/user/.config/xfce4/ /home/user/.config/xfce4/xfconf/ /usr/ /usr/bin/ /usr/bin/torbrowser /usr/lib /etc/NetworkManager /etc/NetworkManager/conf.d /etc/pam.d /usr/lib/obscurix/ /usr/share/ /usr/share/backgrounds/ /usr/share/backgrounds/xfce/ /usr/bin/i2pbrowser /usr/bin/freenet-browser /usr/bin/installi2p /usr/bin/installfreenet /usr/local/ /usr/local/bin/ /usr/local/bin/* /usr/bin/sandbox /lib/systemd /lib/systemd/system /usr/bin/zeronetbrowser /etc/onion-grater.d
+chmod 755 /etc/ /etc/profile.d/ /etc/iptables/ /etc/apparmor.d/ /etc/apparmor.d/abstractions/ /home/user/.config/ /home/user/.config/xfce4/ /home/user/.config/xfce4/xfconf/ /usr/ /usr/bin/ /usr/bin/torbrowser /usr/lib /etc/NetworkManager /etc/NetworkManager/conf.d /etc/pam.d /usr/lib/obscurix/ /usr/share/ /usr/share/backgrounds/ /usr/share/backgrounds/xfce/ /usr/bin/i2pbrowser /usr/bin/freenet-browser /usr/local/ /usr/local/bin/ /usr/local/bin/* /usr/bin/sandbox /lib/systemd /lib/systemd/system /usr/bin/zeronetbrowser /etc/onion-grater.d
 chmod 644 /etc/fstab /etc/bash.bashrc /etc/profile.d/umask.sh /etc/modprobe.d/*.conf /etc/iptables/iptables.rules /etc/apparmor.d/torbrowser.Browser.firefox /etc/apparmor.d/usr.bin.tor /etc/apparmor.d/tunables/torbrowser /etc/environment /home/user/.config/xfce4/xfconf/xfce-perchannel-xml/*.xml /etc/dnsmasq.conf /etc/NetworkManager/conf.d/dns.conf /etc/pam.d/* /usr/share/backgrounds/xfce/background.png /home/user/.bash_profile /etc/onion-grater.d/*.yml
 chmod 700 /home/user/.config/xfce4/xfconf/xfce-perchannel-xml/ /home/user/.config/autostart /home/user/.config/autostart/obscurix-startup.desktop /usr/lib/obscurix/* /home/user/.config/hexchat /home/user/.config/vlc /home/user/.config/xfce4/terminal /home/user/.bash_profile /home/user/.config/xfce4/desktop /home/user/.thunderbird/ /home/user/.thunderbird/profile.default/ /home/user/.gnupg
 chmod 600 /home/user/.config/hexchat/*.conf /home/user/.config/vlc/vlcrc /home/user/.config/xfce4/terminal/terminalrc /home/user/.config/xfce4/desktop/icons.screen.latest.rc /home/user/.thunderbird/profile.default/user.js /home/user/.gnupg/gpg.conf
@@ -169,14 +169,22 @@ else
   echo "FREENET WAS SUCCESSFULLY VERIFIED WITH GPG."
 fi
 
+# Freenet gives a few harmless errors that would
+# kill the script as the script uses "set -e".
+# Because of this, the freenet installation has
+# to be exempted from "set -e".
+set +e
+
 # Install Freenet.
 sudo -u freenet java -jar /home/freenet/new_installer_offline.jar -console <<EOF
 /home/freenet/Freenet
 1
 EOF
 
+set -e
+
 # Freenet autostarts which we don't want at this stage.
-/home/freenet/Freenet/run.sh stop
+sudo -u freenet /home/freenet/Freenet/run.sh stop
 
 # Delete installer and signature.
 rm -f /home/freenet/new_installer_offline.jar /home/freenet/new_installer_offline.jar.sig
