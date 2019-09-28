@@ -21,6 +21,10 @@
   /etc/ssl/** r,
   /etc/java-openjdk/** r,
 
+  /etc/fonts/fonts.conf r, 
+  /usr/share/fonts/ r,
+  /usr/share/fonts/** r,
+
   /home/i2p/i2p/i2psvc mrix,
 
   /proc/ r,
