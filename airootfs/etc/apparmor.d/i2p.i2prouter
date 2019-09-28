@@ -11,6 +11,10 @@
   signal send set=term peer=unconfined,
 
   /sys/fs/cgroup/memory/system.slice/i2p.service/memory.limit_in_bytes r,
+  /sys/fs/cgroup/memory/system.slice/i2p.service/memory.max_usage_in_bytes r,
+  /sys/fs/cgroup/memory/system.slice/i2p.service/memory.memsw.limit_in_bytes r,
+  /sys/fs/cgroup/memory/system.slice/i2p.service/memory.soft_limit_in_bytes r,
+  /sys/fs/cgroup/memory/system.slice/i2p.service/memory.usage_in_bytes r,
 
   /dev/tty rw,
   /etc/host.conf r,
