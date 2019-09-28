@@ -7,6 +7,20 @@ Type=forking
 ExecStart=/home/freenet/Freenet/run.sh start
 User=freenet
 Group=freenet
+ProtectSystem=strict
+ProtectHome=tmpfs
+BindPaths=/home/freenet
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+PrivateTmp=true
+PrivateUsers=true
+PrivateDevices=true
+NoNewPrivileges=true
+RestrictRealtime=true
+SystemCallArchitectures=native
+RestrictNamespaces=true
+SystemCallFilter=@system-service
 KillSignal=SIGKILL
 
 [Install]
