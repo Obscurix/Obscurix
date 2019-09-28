@@ -11,6 +11,7 @@ Group=i2p
 ProtectSystem=strict
 PrivateTmp=true
 AppArmorProfile=/etc/apparmor.d/i2p.i2prouter
+Environment="LD_PRELOAD=/usr/lib/libhardened_malloc.so"
 
 [Install]
 WantedBy=default.target
