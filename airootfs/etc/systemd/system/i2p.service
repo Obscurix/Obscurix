@@ -1,6 +1,7 @@
 [Unit]
 Description=Peer-to-peer anonymous network
 After=network.target
+After=secure-time-sync.service
 
 [Service]
 Type=forking
