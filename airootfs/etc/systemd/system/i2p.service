@@ -7,6 +7,8 @@ Type=forking
 ExecStart=/home/i2p/i2p/i2prouter start
 User=i2p
 Group=i2p
+ProtectSystem=strict
+PrivateTmp=true
 AppArmorProfile=/etc/apparmor.d/i2p.i2prouter
 
 [Install]
