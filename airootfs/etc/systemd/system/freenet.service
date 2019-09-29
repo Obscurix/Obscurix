@@ -24,6 +24,7 @@ SystemCallArchitectures=native
 RestrictNamespaces=true
 SystemCallFilter=@system-service
 Environment="LD_PRELOAD=/usr/lib/libhardened_malloc.so"
+AppArmorProfile=/etc/apparmor.d/Freenet.run.sh
 
 [Install]
 WantedBy=default.target
