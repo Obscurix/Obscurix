@@ -47,7 +47,6 @@
   /etc/udev/udev.conf r,
   /etc/xfce4/defaults.list r,
 
-  /home/user/zeronet-browser/Browser/firefox.real mrix,
   /run/udev/data/+pci:* r,
   /sys/devices/pci[0-9]*/**/uevent r,
   /sys/devices/system/cpu/ r,
@@ -66,14 +65,9 @@
   /usr/share/themes/ r,
   /usr/share/xfce4/applications/ r,
   @{PROC}/sys/kernel/random/uuid r,
-  owner /home/*/zeronet-browser/Browser/fonts/.uuid.LCK l,
 
   owner /{dev,run}/shm/org.chromium.* rw,
   owner /{dev,run}/shm/shmfd-* rw,
-
-  owner @{PROC}/@{pid}/fd/ r,
-  owner @{PROC}/@{pid}/mountinfo r,
-  owner @{PROC}/@{pid}/task/*/stat r,
 
   owner @{zeronetbrowser_home_dir}.bak/ rwk,
   owner @{zeronetbrowser_home_dir}.bak/** rwk,
@@ -95,18 +89,21 @@
   owner @{zeronetbrowser_home_dir}/firefox rix,
   owner @{zeronetbrowser_home_dir}/{,TorBrowser/UpdateInfo/}updates/0/MozUpdater/bgupdate/updater ix,
   owner @{zeronetbrowser_home_dir}/{,TorBrowser/UpdateInfo/}updates/[0-9]*/updater ix,
-
+  owner @{zeronetbrowser_home_dir}/Browser/fonts/.uuid.LCK l,
+  owner @{zeronetbrowser_home_dir}/Browser/firefox.real mrix,
 
   owner @{zeronetbrowser_installation_dir}/ r,
   owner @{zeronetbrowser_installation_dir}/* r,
   owner @{zeronetbrowser_installation_dir}/.** rwk,
   owner @{zeronetbrowser_installation_dir}/update.test/ rwk,
 
-  owner /proc/*/stat r,
   owner /persistent_ARCH_*/x86_64/upperdir/home/user/zeronet-browser/Browser/fonts/ r,
   owner /persistent_ARCH_*/x86_64/upperdir/home/user/zeronet-browser/Browser/TorBrowser/Data/Browser/profile.default/ r,
   owner /persistent_ARCH_*/x86_64/upperdir/home/user/zeronet-browser/Browser/TorBrowser/Data/Browser/profile.default/** r,
-  
+
+  owner @{PROC}/@{pid}/fd/ r,
+  owner @{PROC}/@{pid}/mountinfo r,
+  owner @{PROC}/@{pid}/task/*/stat r,  
   owner @{PROC}/@{pid}/stat r,
   owner @{PROC}/@{pid}/uid_map w,
   owner @{PROC}/@{pid}/setgroups w,

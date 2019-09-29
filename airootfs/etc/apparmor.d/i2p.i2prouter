@@ -31,11 +31,20 @@
 
   /home/i2p/i2p/i2psvc mrix,
 
-  /proc/ r,
-  /proc/meminfo r,
-  /proc/sys/kernel/osrelease r,
-  /proc/sys/kernel/pid_max r,
-  /proc/uptime r,
+  @{PROC}/ r,
+  @{PROC}/meminfo r,
+  @{PROC}/sys/kernel/osrelease r,
+  @{PROC}/sys/kernel/pid_max r,
+  @{PROC}/uptime r,
+  
+  owner @{PROC}/@{pid}/auxv r,
+  owner @{PROC}/@{pid}/cgroup r,
+  owner @{PROC}/@{pid}/cmdline r,
+  owner @{PROC}/@{pid}/coredump_filter rw,
+  owner @{PROC}/@{pid}/fd/ r,
+  owner @{PROC}/@{pid}/mountinfo r,
+  owner @{PROC}/@{pid}/stat r,
+  owner @{PROC}/@{pid}/status r,
 
   /sys/devices/system/cpu/online r,
   /sys/fs/cgroup/cpu,cpuacct/cpu.cfs_period_us r,
@@ -86,15 +95,6 @@
   
   /usr/share/GeoIP/GeoIP.dat r,
   /usr/share/GeoIP/GeoIPv6.dat r,
-
-  owner /proc/*/auxv r,
-  owner /proc/*/cgroup r,
-  owner /proc/*/cmdline r,
-  owner /proc/*/coredump_filter rw,
-  owner /proc/*/fd/ r,
-  owner /proc/*/mountinfo r,
-  owner /proc/*/stat r,
-  owner /proc/*/status r,
 
   owner /tmp/** m,
 

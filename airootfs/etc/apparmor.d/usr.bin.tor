@@ -12,20 +12,21 @@
   /etc/nsswitch.conf r,
   /etc/passwd r,
   /etc/resolv.conf r,
-  /etc/tor/* r,
 
-  /proc/sys/kernel/random/uuid r,
   /usr/bin/tor mr,
   /usr/share/tor/geoip r,
   /usr/share/tor/geoip6 r,
 
   owner /etc/tor/ r,
+  owner /etc/tor/* r,
   owner /var/lib/tor/ r,
   owner /var/lib/tor/** rwk,
-  owner @{PROC}/@{pid}/stat r,
   owner /persistent_ARCH_*/x86_64/upperdir/var/lib/tor/ rw,
   owner /persistent_ARCH_*/x86_64/upperdir/var/lib/tor/** rw,
 
   owner /run/tor/ rw,
   owner /run/tor/* rw,
+
+  owner @{PROC}/@{pid}/stat r,
+  @{PROC}/sys/kernel/random/uuid r,
 }

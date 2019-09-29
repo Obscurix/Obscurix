@@ -22,7 +22,7 @@
   deny /usr/bin/ r,
   deny /usr/lib/ r,
   deny /var/ r,
-  deny /persistent_ARCH_201909/x86_64/upperdir/ r,
+  deny /persistent_ARCH_*/x86_64/upperdir/ r,
 
   /dev/tty rw,
 
@@ -63,14 +63,14 @@
   owner /home/freenet/Freenet/** mrwk,
   /home/freenet/Freenet/./bin/wrapper-linux-x86-64 mrix,
   /home/freenet/Freenet/bin/wrapper-linux-x86-64 mrix,
-  owner /persistent_ARCH_201909/x86_64/upperdir/home/freenet/Freenet/ r,
-  owner /persistent_ARCH_201909/x86_64/upperdir/home/freenet/Freenet/** r,
+  owner /persistent_ARCH_*/x86_64/upperdir/home/freenet/Freenet/ r,
+  owner /persistent_ARCH_*/x86_64/upperdir/home/freenet/Freenet/** r,
  
-  owner /proc/*/cgroup r,
-  owner /proc/*/coredump_filter rw,
-  owner /proc/*/fd/ r,
-  owner /proc/*/mountinfo r,
-  owner /proc/*/stat r,
+  owner @{PROC}/@{pid}/cgroup r,
+  owner @{PROC}/@{pid}/coredump_filter rw,
+  owner @{PROC}/@{pid}/fd/ r,
+  owner @{PROC}/@{pid}/mountinfo r,
+  owner @{PROC}/@{pid}/stat r,
  
   owner /tmp/hsperfdata_freenet/ rw,
   owner /tmp/hsperfdata_freenet/* rw,

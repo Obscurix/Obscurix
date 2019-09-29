@@ -19,11 +19,13 @@
   /etc/fstab r,
   /etc/machine-id r,
   /etc/passwd r,
- 
+
+  owner /usr/share/fonts/** rw, 
   /persistent_ARCH_*/x86_64/upperdir/usr/share/fonts/ r,
   /persistent_ARCH_*/x86_64/upperdir/usr/share/fonts/** r,
- 
-  /proc/*/mountinfo r,
+
+  owner @{PROC}/@{pid}/cmdline r, 
+  @{PROC}/@{pid}/mountinfo r,
   /proc/sys/kernel/random/boot_id r,
  
   /sys/bus/ r,
@@ -40,9 +42,12 @@
   /usr/share/keepassxc/** r,
   /usr/share/mime/mime.cache r,
   /usr/share/pixmaps/ r,
+  
+  owner /home/user/ r,
+  owner /persistent_ARCH_*/x86_64/upperdir/home/user/ r,
  
-  owner @{HOME}/*.kdbx rw,
-  owner @{HOME}/*.kdbx.* rw,
+  owner @{HOME}/**.kdbx rw,
+  owner @{HOME}/**.kdbx.* rw,
 
   owner @{HOME}/.Xauthority r,
   owner @{HOME}/.bash_logout r,
@@ -64,11 +69,5 @@
   owner @{HOME}/.local/share/recently-used.xbel.* rw,
   owner @{HOME}/.xinitrc r,
 
-  owner /home/user/ r,
-  owner /persistent_ARCH_*/x86_64/upperdir/home/user/ r,
-
-  owner /proc/*/cmdline r,
   owner /run/user/1000/ICEauthority r,
-  owner /usr/share/fonts/** rw,
-
 }

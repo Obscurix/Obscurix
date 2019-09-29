@@ -67,8 +67,8 @@
   owner @{HOME}/.cache/thumbnails/ w,
   owner @{HOME}/.cache/thumbnails/** w,
 
-  owner /proc/*/fd/ r,
-  owner /proc/*/mountinfo r,
+  owner @{PROC}/@{pid}/fd/ r,
+  owner @{PROC}/@{pid}/mountinfo r,
 
   owner /run/user/1000/dconf/user rw,
   owner /usr/share/fonts/** rw,

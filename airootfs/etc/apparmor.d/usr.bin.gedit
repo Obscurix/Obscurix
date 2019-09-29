@@ -19,39 +19,32 @@
 
   /etc/fstab r,
   
-  # GTK stuff.
   /usr/share/gtk-3.0/settings.ini r,
   /usr/share/gtksourceview-4/** r,
   
-  # Give access to all of /usr/share/mime.
   /usr/share/mime/ r,
   /usr/share/mime/** r,
   
-  # Spell checking.
   /usr/share/hspell/* r,
   /usr/share/enchant/enchant.ordering r,
   
-  # Icons.  
   /usr/share/pixmaps/ r,
   /usr/share/icons/ r,
   /usr/share/icons/** r,
   
-  # ISO codes.
   /usr/share/xml/iso-codes/*.xml r,
 
   /usr/bin/gedit mr,
   
-  # Read and create files in every home directory.
   owner /home/** rw,
   
-  # User configuration and cache.
-  owner /home/*/.cache/fontconfig/* r,
-  owner /home/*/.config/dconf/user r,
-  owner /home/*/.config/enchant/ w,
-  owner /home/*/.config/enchant/* rwk,
+  owner @{HOME}/.cache/fontconfig/* r,
+  owner @{HOME}/.config/dconf/user r,
+  owner @{HOME}/.config/enchant/ w,
+  owner @{HOME}/.config/enchant/* rwk,
 
-  owner /home/*/.local/share/recently-used.xbel rw,
-  owner /home/*/.local/share/recently-used.xbel.* rw,
+  owner @{HOME}/.local/share/recently-used.xbel rw,
+  owner @{HOME}/.local/share/recently-used.xbel.* rw,
 
   owner /proc/*/mountinfo r,
   owner /run/user/1000/dconf/user rw,
