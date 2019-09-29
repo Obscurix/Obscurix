@@ -10,7 +10,10 @@ User=i2p
 Group=i2p
 PIDFile=/home/i2p/.i2p/i2p.pid
 ProtectSystem=strict
+ProtectHome=tmpfs
+BindPaths=/home/i2p
 PrivateTmp=true
+PrivateUsers=true
 AppArmorProfile=/etc/apparmor.d/i2p.i2prouter
 Environment="LD_PRELOAD=/usr/lib/libhardened_malloc.so"
 
