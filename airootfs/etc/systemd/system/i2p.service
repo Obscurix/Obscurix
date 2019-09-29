@@ -1,6 +1,7 @@
 [Unit]
 Description=Peer-to-peer anonymous network
-After=network.target
+Wants=network-online.target
+After=network-online.target
 After=secure-time-sync.service
 
 [Service]

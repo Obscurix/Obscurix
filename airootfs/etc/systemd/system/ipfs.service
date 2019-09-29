@@ -1,6 +1,7 @@
 [Unit]
 Description=IPFS daemon
-After=network.target
+Wants=network-online.target
+After=network-online.target
 
 [Service]
 ExecStartPre=/usr/bin/ipfs init
