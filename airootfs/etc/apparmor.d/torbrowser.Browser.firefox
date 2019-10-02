@@ -89,7 +89,7 @@
   owner @{torbrowser_home_dir}/firefox rix,
   owner @{torbrowser_home_dir}/{,TorBrowser/UpdateInfo/}updates/0/MozUpdater/bgupdate/updater ix,
   owner @{torbrowser_home_dir}/{,TorBrowser/UpdateInfo/}updates/[0-9]*/updater ix,
-  owner @{torbrowser_home_dir}/Browser/fonts/.uuid.LCK l
+  owner @{torbrowser_home_dir}/Browser/fonts/.uuid.LCK l,
   owner @{torbrowser_home_dir}/Browser/firefox.real mrix,
 
   owner @{torbrowser_installation_dir}/ r,
