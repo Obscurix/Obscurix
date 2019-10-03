@@ -18,7 +18,7 @@
   /usr/share/tor/geoip6 r,
 
   owner /etc/tor/ r,
-  owner /etc/tor/* r,
+  /etc/tor/* r,
   owner /var/lib/tor/ r,
   owner /var/lib/tor/** rwk,
   owner /persistent_ARCH_*/x86_64/upperdir/var/lib/tor/ rw,
