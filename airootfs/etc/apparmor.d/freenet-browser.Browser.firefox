@@ -80,7 +80,7 @@
   owner @{freenetbrowser_home_dir}/{,TorBrowser/UpdateInfo/}updates/0/MozUpdater/bgupdate/updater ix,
   owner @{freenetbrowser_home_dir}/{,TorBrowser/UpdateInfo/}updates/[0-9]*/updater ix,
   owner @{freenetbrowser_home_dir}/fonts/.uuid.LCK l,
-  owner @{freenetbrowser_home_dir}/firefox.real mrix,
+  @{freenetbrowser_home_dir}/firefox.real mrix,
 
   owner @{freenetbrowser_installation_dir}/ r,
   owner @{freenetbrowser_installation_dir}/* r,
