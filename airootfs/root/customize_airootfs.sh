@@ -348,5 +348,5 @@ sed -i 's/\/usr\/bin\/vlc/vlc/g' /usr/share/applications/vlc.desktop
 sed -i 's/\/usr\/lib\/thunderbird\/thunderbird/thunderbird/g' /usr/share/applications/thunderbird.desktop
 
 # Required for evince sandbox.
-mkdir -m 700 /home/user/{,i2p,freenet,zeronet,tor}-browser{,_en-US}/Browser/Downloads
+mkdir -m 700 /home/user/{,i2p,freenet,zeronet}-browser/Browser/Downloads /home/user/tor-browser_en-US/Browser/Downloads
 chown user:user /home/user/*-browser*/Browser/Downloads
