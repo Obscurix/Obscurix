@@ -17,6 +17,10 @@ sed -i 's/\/usr\/sbin\/kloak/\/usr\/bin\/kloak/g' /lib/systemd/system/kloak.serv
 sed -i 's/\/usr\/sbin\/kloak/\/usr\/bin\/kloak/g' /etc/apparmor.d/usr.bin.kloak
 sed -i 's/#include <local\/usr.sbin.kloak>//' /etc/apparmor.d/usr.bin.kloak
 
+# Kloak doesn't need to ptrace onion-grater but
+# it comes up in the logs anyway.
+sed -i '8 a deny ptrace readby peer=/usr/lib/onion-grater,' /etc/apparmor.d/usr.bin.kloak
+
 # Enable the systemd service.
 systemctl enable kloak.service
 
