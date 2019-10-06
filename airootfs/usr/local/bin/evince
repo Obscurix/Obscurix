@@ -1,8 +1,13 @@
 #!/bin/bash
 
 bwrap \
---bind /home/user /home/user \
---bind /run/user/1000 /run/user/1000 \
+--tmpfs /home/user \
+--bind /home/user/Downloads /home/user/Downloads \
+--bind /home/user/tor-browser_en-US/Browser/Downloads /home/user/tor-browser_en-US/Browser/Downloads \
+--bind /home/user/i2p-browser/Browser/Downloads /home/user/i2p-browser/Browser/Downloads \ 
+--bind /home/user/freenet-browser/Browser/Downloads /home/user/freenet-browser/Browser/Downloads \
+--bind /home/user/zeronet-browser/Browser/Downloads /home/user/zeronet-browser/Browser/Downloads \
+--tmpfs /run \
 --ro-bind /etc/fonts /etc/fonts \
 --ro-bind /usr/bin /usr/bin \
 --ro-bind /usr/lib /usr/lib \
