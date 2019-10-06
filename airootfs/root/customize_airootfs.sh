@@ -316,9 +316,6 @@ setcap "cap_net_admin+eip cap_net_raw+eip" /usr/bin/cjdroute
 useradd --system --user-group cjdns
 chown cjdns:cjdns /usr/bin/cjdroute /etc/cjdroute.conf
 
-# Disable unnecessary services for improved boot speed.
-systemctl disable lvm2-monitor.service
-
 # Disable NetworkManager connectivity check.
 echo "interval=0" | tee -a /usr/lib/NetworkManager/conf.d/20-connectivity.conf >/dev/null
 
