@@ -177,6 +177,9 @@ int main(int argc, char *argv[])
     ALLOW_RULE (semget);
     ALLOW_RULE (semctl);
     ALLOW_RULE (semop);
+    ALLOW_RULE (chroot);
+    ALLOW_RULE (fgetxattr);
+    ALLOW_RULE (fsetxattr);
     
     filter_fd = open("/usr/local/share/seccomp/tor-browser/tbb_seccomp.bpf", O_CREAT | O_WRONLY, 0644);
     if (filter_fd == -1) {
