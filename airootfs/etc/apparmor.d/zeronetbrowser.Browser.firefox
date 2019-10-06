@@ -90,7 +90,7 @@
   owner @{zeronetbrowser_home_dir}/{,TorBrowser/UpdateInfo/}updates/0/MozUpdater/bgupdate/updater ix,
   owner @{zeronetbrowser_home_dir}/{,TorBrowser/UpdateInfo/}updates/[0-9]*/updater ix,
   owner @{zeronetbrowser_home_dir}/Browser/fonts/.uuid.LCK l,
-  @{zeronetbrowser_home_dir}/Browser/firefox.real mrix,
+  @{zeronetbrowser_home_dir}/firefox.real mrix,
 
   owner @{zeronetbrowser_installation_dir}/ r,
   owner @{zeronetbrowser_installation_dir}/* r,

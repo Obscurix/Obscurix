@@ -80,7 +80,7 @@
   owner @{i2pbrowser_home_dir}/{,TorBrowser/UpdateInfo/}updates/0/MozUpdater/bgupdate/updater ix,
   owner @{i2pbrowser_home_dir}/{,TorBrowser/UpdateInfo/}updates/[0-9]*/updater ix,
   owner @{i2pbrowser_home_dir}/fonts/.uuid.LCK l,
-  @{i2pbrowser_home_dir}/Browser/firefox.real mrix,
+  @{i2pbrowser_home_dir}/firefox.real mrix,
 
   owner @{i2pbrowser_installation_dir}/ r,
   owner @{i2pbrowser_installation_dir}/* r,
