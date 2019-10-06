@@ -1,7 +1,9 @@
 #!/bin/bash
 
 bwrap \
---bind /home/user /home/user \
+--tmpfs ~/ \
+--bind ~/.Xauthority ~/.Xauthority \
+--bind ~/tor-browser_en-US ~/tor-browser_en-US \
 --ro-bind /usr/bin/bash /usr/bin/bash \
 --ro-bind /usr/bin/sh /usr/bin/sh \
 --ro-bind /usr/bin/grep /usr/bin/grep \
@@ -33,4 +35,6 @@ bwrap \
 --setenv SHELL /bin/false \
 --tmpfs /tmp/ \
 --dev /dev/ \
+--seccomp 10 \
+10< /usr/local/share/seccomp/tor-browser/tbb_seccomp.bpf \
 /home/user/tor-browser_en-US/Browser/start-tor-browser
