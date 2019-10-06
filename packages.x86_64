@@ -3,7 +3,7 @@ dialog
 dnsmasq
 dnsutils
 
-linux
+linux-hardened
 linux-firmware
 
 sudo
