@@ -1,13 +1,9 @@
 arch-install-scripts
-
-broadcom-wl
-
 dialog
 dnsmasq
 dnsutils
 
-ipw2100-fw
-ipw2200-fw
+linux-firmware
 
 sudo
 
