@@ -37,4 +37,3 @@ COMMIT
 --ipv4 -A OUTPUT -j REJECT --reject-with icmp-port-unreachable
 --ipv6 -A OUTPUT -j REJECT
 COMMIT
-
