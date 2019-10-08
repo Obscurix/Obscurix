@@ -45,6 +45,7 @@
   owner /media/**  r,
   owner @{HOME}/.local/share/gvfs-metadata/** l,
   owner /{,var/}run/user/*/gvfs-metadata/** l,
+  owner @{HOME}/.local/ rw,
 
   /etc/dconf/**                                       r,
   owner @{HOME}/.cache/dconf/user                     rw,
