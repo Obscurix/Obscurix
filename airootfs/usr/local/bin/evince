@@ -27,4 +27,6 @@ bwrap \
 --setenv LD_PRELOAD /usr/lib/libhardened_malloc.so \
 --tmpfs /tmp/ \
 --dev /dev/ \
+--seccomp 10 \
+10< /usr/local/share/seccomp/default_seccomp.bpf \
 /usr/bin/evince

@@ -349,6 +349,10 @@ mkdir -m 700 /home/user/i2p-browser/Browser/Downloads /home/user/freenet-browser
 chown user:user /home/user/*-browser*/Browser/Downloads
 
 # Generate seccomp filters.
-gcc /usr/local/share/seccomp/tor-browser/tbb-seccomp.c -o /usr/local/share/seccomp/tor-browser/tbb-seccomp -lseccomp
-/usr/local/share/seccomp/tor-browser/tbb-seccomp
+for i in tor-browser/tbb-seccomp default-seccomp
+do
+  gcc /usr/local/share/seccomp/${i}.c -o /usr/local/share/seccomp/${i} -lseccomp
+  /usr/local/share/seccomp/${i}
+done
+
 chmod 644 /usr/local/share/seccomp/*/*
