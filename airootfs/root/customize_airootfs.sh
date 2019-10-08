@@ -353,6 +353,7 @@ for i in tor-browser/tbb-seccomp default-seccomp
 do
   gcc /usr/local/share/seccomp/${i}.c -o /usr/local/share/seccomp/${i} -lseccomp
   /usr/local/share/seccomp/${i}
+  rm /usr/local/share/seccomp/${i}{,.c}
 done
 
 chmod 644 /usr/local/share/seccomp/*/*
