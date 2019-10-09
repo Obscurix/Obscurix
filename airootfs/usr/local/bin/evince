@@ -2,7 +2,7 @@
 
 bwrap \
 --tmpfs /home/user \
---bind /home/user/.Xauthority /home/user/.Xauthority \
+--ro-bind /home/user/.Xauthority /home/user/.Xauthority \
 --bind /home/user/Downloads /home/user/Downloads \
 --bind /home/user/tor-browser_en-US/Browser/Downloads /home/user/tor-browser_en-US/Browser/Downloads \
 --bind /home/user/i2p-browser/Browser/Downloads /home/user/i2p-browser/Browser/Downloads \

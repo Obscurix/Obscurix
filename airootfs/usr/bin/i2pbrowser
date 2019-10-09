@@ -2,7 +2,7 @@
 
 bwrap \
 --tmpfs /home/user \
---bind /home/user/.Xauthority /home/user/.Xauthority \
+--ro-bind /home/user/.Xauthority /home/user/.Xauthority \
 --bind /home/user/i2p-browser /home/user/i2p-browser \
 --ro-bind /usr/bin/bash /usr/bin/bash \
 --ro-bind /usr/bin/sh /usr/bin/sh \
