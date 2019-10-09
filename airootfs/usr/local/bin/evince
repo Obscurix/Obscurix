@@ -8,9 +8,11 @@ bwrap \
 --bind /home/user/i2p-browser/Browser/Downloads /home/user/i2p-browser/Browser/Downloads \
 --bind /home/user/freenet-browser/Browser/Downloads /home/user/freenet-browser/Browser/Downloads \
 --bind /home/user/zeronet-browser/Browser/Downloads /home/user/zeronet-browser/Browser/Downloads \
---tmpfs /run \
+--tmpfs /home/user/.local/share \
+--tmpfs /home/user/.config \
+--tmpfs /run/user/1000 \
 --ro-bind /etc/fonts /etc/fonts \
---ro-bind /usr/bin /usr/bin \
+--ro-bind /usr/bin/evince /usr/bin/evince \
 --ro-bind /usr/lib /usr/lib \
 --ro-bind /usr/share /usr/share \
 --symlink /usr/bin /bin \
@@ -18,15 +20,16 @@ bwrap \
 --symlink /usr/lib /lib \
 --symlink /usr/lib /lib64 \
 --unshare-pid \
---proc /proc \
 --unshare-cgroup \
 --unshare-uts \
+--unshare-ipc \
 --cap-drop all \
 --new-session \
 --setenv SHELL /bin/false \
 --setenv LD_PRELOAD /usr/lib/libhardened_malloc.so \
---tmpfs /tmp/ \
---dev /dev/ \
+--tmpfs /tmp \
+--dev /dev \
+--proc /proc \
 --seccomp 10 \
 10< /usr/local/share/seccomp/default_seccomp.bpf \
 /usr/bin/evince
