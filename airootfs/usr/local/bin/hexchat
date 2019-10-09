@@ -2,13 +2,13 @@
 
 bwrap --dev-bind / / \
 --unshare-pid \
---proc /proc \
 --unshare-cgroup \
 --unshare-uts \
 --unshare-ipc \
 --cap-drop all \
 --new-session \
 --setenv SHELL /bin/false \
---tmpfs /tmp/ \
---dev /dev/ \
+--tmpfs /tmp \
+--dev /dev \
+--proc /proc \
 /usr/bin/hexchat

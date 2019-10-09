@@ -2,7 +2,6 @@
 
 bwrap --dev-bind / / \
 --unshare-pid \
---proc /proc \
 --unshare-cgroup \
 --unshare-uts \
 --unshare-ipc \
@@ -10,6 +9,7 @@ bwrap --dev-bind / / \
 --new-session \
 --setenv SHELL /bin/false \
 --setenv LD_PRELOAD /usr/lib/libhardened_malloc.so \
---tmpfs /tmp/ \
---dev /dev/ \
+--tmpfs /tmp \
+--dev /dev \
+--proc /proc \
 /usr/bin/vlc

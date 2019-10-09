@@ -31,14 +31,14 @@ bwrap \
 --symlink /usr/lib /lib \
 --symlink /usr/lib /lib64 \
 --unshare-pid \
---proc /proc \
 --unshare-cgroup \
 --unshare-uts \
 --cap-drop all \
 --new-session \
 --setenv SHELL /bin/false \
---tmpfs /tmp/ \
---dev /dev/ \
+--tmpfs /tmp \
+--dev /dev \
+--proc /proc \
 --seccomp 10 \
 10< /usr/local/share/seccomp/tor-browser/tbb_seccomp.bpf \
 /home/user/zeronet-browser/Browser/start-tor-browser
