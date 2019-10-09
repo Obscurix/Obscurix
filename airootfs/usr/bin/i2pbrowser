@@ -25,6 +25,7 @@ bwrap \
 --ro-bind /usr/share/mime /usr/share/mime \
 --ro-bind /usr/share/xfce4 /usr/share/xfce4 \
 --ro-bind /usr/share/glib-2.0 /usr/share/glib-2.0 \
+--ro-bind /usr/share/icons /usr/share/icons \
 --ro-bind /usr/lib /usr/lib \
 --symlink /usr/bin /bin \
 --symlink /usr/bin /sbin \
