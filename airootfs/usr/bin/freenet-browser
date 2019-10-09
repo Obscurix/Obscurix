@@ -20,8 +20,12 @@ bwrap \
 --ro-bind /usr/bin/cp /usr/bin/cp \
 --ro-bind /usr/bin/rm /usr/bin/rm \
 --ro-bind /usr/bin/getconf /usr/bin/getconf \
+--ro-bind /usr/share/themes /usr/share/themes \
+--ro-bind /usr/share/applications /usr/share/applications \
+--ro-bind /usr/share/mime /usr/share/mime \
+--ro-bind /usr/share/xfce4 /usr/share/xfce4 \
+--ro-bind /usr/share/glib-2.0 /usr/share/glib-2.0 \
 --ro-bind /usr/lib /usr/lib \
---ro-bind /usr/share /usr/share \
 --symlink /usr/bin /bin \
 --symlink /usr/bin /sbin \
 --symlink /usr/lib /lib \
