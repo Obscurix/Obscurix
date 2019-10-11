@@ -1,0 +1,34 @@
+#!/bin/bash -e
+
+if [[ "${@}" = "" ]]; then
+  echo "ERROR: Nothing was supplied."
+  exit 1
+fi
+
+xpra_args="--pulseaudio=no \
+--mdns=no \
+--webcam=no \
+--microphone=off \
+--printing=no \
+--sharing=no \
+--tray=no \
+--title=@title@ \
+--cursors=yes"
+
+bwrap \
+--dev-bind / / \
+--unshare-pid \
+--unshare-cgroup \
+--unshare-uts \
+--cap-drop all \
+--new-session \
+--setenv SHELL /bin/false \
+--tmpfs /tmp \
+--dev /dev \
+--proc /proc \
+/usr/bin/xpra start ${@} --no-daemon --html=off ${xpra_args} &
+
+# Wait until the xpra server has started.
+sleep 5
+
+xpra attach ${@} ${xpra_args} &
