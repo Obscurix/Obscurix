@@ -17,7 +17,23 @@ xpra_args="--pulseaudio=no \
 --global-menus=yes"
 
 bwrap \
---dev-bind / / \
+--tmpfs /home/user \
+--bind /home/user/.Xauthority /home/user/.Xauthority \
+--bind /home/user/.cache /home/user/.cache \
+--bind /home/user/.xpra /home/user/.xpra \
+--ro-bind /usr/bin /usr/bin \
+--ro-bind /usr/lib /usr/lib \
+--ro-bind /usr/share /usr/share \
+--symlink /usr/bin /bin \
+--symlink /usr/bin /sbin \
+--symlink /usr/lib /lib \
+--symlink /usr/lib /lib64 \
+--bind /run/user/1000/xpra /run/user/1000/xpra \
+--bind /run/user/1000/dbus-1 /run/user/1000/dbus-1 \
+--bind /run/xpra /run/xpra \
+--bind /run/udev/data /run/udev/data \
+--ro-bind /sys /sys \
+--ro-bind /etc /etc \
 --unshare-pid \
 --unshare-cgroup \
 --unshare-uts \
