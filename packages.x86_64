@@ -30,6 +30,8 @@ macchanger
 dnsmasq
 jitterentropy
 xorg-server-xephyr
+xpra
+python-xdg
 
 xf86-video-intel
 xf86-input-libinput
