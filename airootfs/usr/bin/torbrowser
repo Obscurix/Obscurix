@@ -1,5 +1,9 @@
 #!/bin/bash
 
+xpra_display=":10"
+
+start-xpra ${xpra_display}
+
 bwrap \
 --tmpfs /home/user \
 --ro-bind /home/user/.Xauthority /home/user/.Xauthority \
@@ -43,3 +47,5 @@ bwrap \
 --seccomp 10 \
 10< /usr/local/share/seccomp/tor-browser/tbb_seccomp.bpf \
 /home/user/tor-browser_en-US/Browser/start-tor-browser
+
+xpra stop ${xpra_display}
