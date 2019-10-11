@@ -13,7 +13,8 @@ xpra_args="--pulseaudio=no \
 --sharing=no \
 --tray=no \
 --title=@title@ \
---cursors=yes"
+--cursors=yes \
+--global-menus=yes"
 
 bwrap \
 --dev-bind / / \
