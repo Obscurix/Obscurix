@@ -41,6 +41,7 @@ bwrap \
 --cap-drop all \
 --new-session \
 --setenv SHELL /bin/false \
+--setenv DISPLAY ${xpra_display} \
 --tmpfs /tmp \
 --dev /dev \
 --proc /proc \
