@@ -14,7 +14,8 @@ xpra_args="--pulseaudio=no \
 --tray=no \
 --title=@title@ \
 --cursors=yes \
---global-menus=yes"
+--global-menus=yes \
+--notifications=no"
 
 bwrap \
 --tmpfs /home/user \
