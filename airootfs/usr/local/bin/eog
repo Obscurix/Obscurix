@@ -25,6 +25,7 @@ bwrap \
 --unshare-pid \
 --unshare-cgroup \
 --unshare-uts \
+--unshare-ipc \
 --cap-drop all \
 --new-session \
 --setenv SHELL /bin/false \
