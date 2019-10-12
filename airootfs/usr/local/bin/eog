@@ -1,13 +1,6 @@
 #!/bin/bash
 
 bwrap \
---ro-bind /usr/bin/eog /usr/bin/eog \
---ro-bind /usr/share /usr/share \
---ro-bind /usr/lib /usr/lib \
---ro-bind /etc/gtk-2.0 /etc/gtk-2.0 \
---ro-bind /etc/gtk-3.0 /etc/gtk-3.0 \
---ro-bind /etc/fonts /etc/fonts \
---tmpfs /run \
 --tmpfs /home/user \
 --ro-bind /home/user/.Xauthority /home/user/.Xauthority \
 --bind /home/user/Downloads /home/user/Downloads \
@@ -15,6 +8,13 @@ bwrap \
 --bind /home/user/i2p-browser/Browser/Downloads /home/user/i2p-browser/Browser/Downloads \
 --bind /home/user/freenet-browser/Browser/Downloads /home/user/freenet-browser/Browser/Downloads \
 --bind /home/user/zeronet-browser/Browser/Downloads /home/user/zeronet-browser/Browser/Downloads \
+--ro-bind /usr/bin/eog /usr/bin/eog \
+--ro-bind /usr/share /usr/share \
+--ro-bind /usr/lib /usr/lib \
+--ro-bind /etc/gtk-2.0 /etc/gtk-2.0 \
+--ro-bind /etc/gtk-3.0 /etc/gtk-3.0 \
+--ro-bind /etc/fonts /etc/fonts \
+--tmpfs /run \
 --symlink /usr/bin /bin \
 --symlink /usr/bin /sbin \
 --symlink /usr/lib /lib \
@@ -29,4 +29,6 @@ bwrap \
 --tmpfs /tmp \
 --dev /dev \
 --proc /proc \
+--seccomp 10 \
+10< /usr/local/share/seccomp/eog_seccomp.bpf \
 /usr/bin/eog

@@ -349,7 +349,7 @@ mkdir -m 700 /home/user/i2p-browser/Browser/Downloads /home/user/freenet-browser
 chown user:user /home/user/*-browser*/Browser/Downloads
 
 # Generate seccomp filters.
-for i in default-seccomp tbb-seccomp evince-seccomp
+for i in default-seccomp tbb-seccomp evince-seccomp eog-seccomp
 do
   gcc /usr/local/share/seccomp/${i}.c -o /usr/local/share/seccomp/${i} -lseccomp
   /usr/local/share/seccomp/${i}
