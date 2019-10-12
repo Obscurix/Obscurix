@@ -50,6 +50,7 @@ bwrap \
 # before it has already started, it will fail
 # and won't retry. This only retries 10 times.
 for i in {1..10}
+do
   if xpra info ${@} &>/dev/null; then
     xpra attach ${@} ${xpra_args} &
     break
