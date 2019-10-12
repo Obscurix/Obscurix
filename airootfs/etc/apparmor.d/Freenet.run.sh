@@ -36,6 +36,7 @@
   /sys/fs/cgroup/cpu,cpuacct/cpu.cfs_quota_us r,
   /sys/fs/cgroup/cpu,cpuacct/cpu.shares r,
   /sys/fs/cgroup/memory/system.slice/freenet.service/memory.limit_in_bytes r,
+  /sys/fs/cgroup/memory/system.slice/freenet.service/memory.use_hierarchy r,
 
   /{,usr/}bin/java mrix,
   /usr/bin/bash ix,
@@ -54,8 +55,7 @@
   /usr/bin/uname mrix,
   /usr/bin/which mrix,
 
-  /usr/lib/jvm/java-*-openjdk/bin/java mrix,
-  /usr/lib/jvm/java-*-openjdk/lib/server/classes.jsa mr,
+  /usr/lib/jvm/java-*-openjdk/** mrix,
   /etc/java-openjdk/** r,
  
   owner /home/freenet/ r,

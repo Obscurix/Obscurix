@@ -78,7 +78,7 @@
   owner /run/user/1000/xpra/ rw,
   owner /run/user/1000/xpra/** rw,
 
-  /run/xpra r,
+  /run/xpra/ r,
   owner /run/xpra/ rw,
   owner /run/xpra/** rw,
 
@@ -95,6 +95,7 @@
 
   owner @{PROC}/@{pid}/cmdline r,
   owner @{PROC}/@{pid}/mounts r,
+  owner @{PROC}/@{pid}/mountinfo r,
   @{PROC}/cmdline r,
   @{PROC}/cpuinfo r,
   @{PROC}/loadavg r,
