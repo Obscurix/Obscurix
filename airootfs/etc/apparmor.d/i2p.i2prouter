@@ -75,7 +75,7 @@
   /usr/bin/head mrix,
   /usr/bin/xdg-mime mrix,
   /usr/bin/xdg-open mrix,
-  /usr/lib/jvm/java-12-openjdk/bin/java mrix,
+  /usr/lib/jvm/java-*-openjdk/bin/java mrix,
   /usr/lib/ld-2.30.so mrix,
   /usr/lib/jvm/** mr,
    

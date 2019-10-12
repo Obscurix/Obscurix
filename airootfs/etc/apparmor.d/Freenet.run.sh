@@ -54,8 +54,8 @@
   /usr/bin/uname mrix,
   /usr/bin/which mrix,
 
-  /usr/lib/jvm/java-12-openjdk/bin/java mrix,
-  /usr/lib/jvm/java-12-openjdk/lib/server/classes.jsa mr,
+  /usr/lib/jvm/java-*-openjdk/bin/java mrix,
+  /usr/lib/jvm/java-*-openjdk/lib/server/classes.jsa mr,
   /etc/java-openjdk/** r,
  
   owner /home/freenet/ r,
