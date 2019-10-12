@@ -46,7 +46,7 @@ bwrap \
 --dev /dev \
 --proc /proc \
 --seccomp 10 \
-10< /usr/local/share/seccomp/tor-browser/tbb_seccomp.bpf \
+10< /usr/local/share/seccomp/tbb_seccomp.bpf \
 /home/user/i2p-browser/Browser/start-tor-browser
 
 xpra stop ${xpra_display}
