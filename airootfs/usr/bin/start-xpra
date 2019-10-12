@@ -34,10 +34,13 @@ bwrap \
 --unshare-pid \
 --unshare-cgroup \
 --unshare-uts \
+--unshare-net \
+--unshare-ipc \
 --cap-drop all \
 --new-session \
 --setenv SHELL /bin/false \
 --tmpfs /tmp \
+--bind /tmp/.X11-unix /tmp/.X11-unix \
 --dev /dev \
 --proc /proc \
 /usr/bin/xpra start ${@} --no-daemon --html=off ${xpra_args} &
