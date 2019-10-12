@@ -8,11 +8,9 @@ bwrap \
 --bind /home/user/i2p-browser/Browser/Downloads /home/user/i2p-browser/Browser/Downloads \
 --bind /home/user/freenet-browser/Browser/Downloads /home/user/freenet-browser/Browser/Downloads \
 --bind /home/user/zeronet-browser/Browser/Downloads /home/user/zeronet-browser/Browser/Downloads \
---bind /home/user/.cache/fontconfig /home/user/.cache/fontconfig \
---bind /home/user/.cache/thumbnails /home/user/.cache/thumbnails \
---bind /home/user/.config/dconf/user /home/user/.config/dconf/user \
---bind /home/user/.config/mimeapps.list  /home/user/.config/mimeapps.list
---ro-bind /home/user/.local/share/applications /home/user/.local/share/applications \
+--bind /home/user/.cache /home/user/.cache \
+--bind /home/user/.config /home/user/.config \
+--ro-bind /home/user/.local/share /home/user/.local/share \
 --ro-bind /usr/bin/eog /usr/bin/eog \
 --ro-bind /usr/share /usr/share \
 --ro-bind /usr/lib /usr/lib \
