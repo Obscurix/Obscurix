@@ -35,6 +35,7 @@ bwrap \
 --symlink /usr/bin /sbin \
 --symlink /usr/lib /lib \
 --symlink /usr/lib /lib64 \
+--tmpfs /run/user/1000 \
 --unshare-pid \
 --unshare-cgroup \
 --unshare-uts \

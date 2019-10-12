@@ -53,6 +53,7 @@
   # Allow read access to home directory.
   owner @{HOME}/ r,
   owner @{HOME}/** r,
+  owner @{HOME}/**/ r,
 
   owner @{HOME}/.Xauthority r,
   owner @{HOME}/.cache/fontconfig/* r,

@@ -37,6 +37,7 @@
   /sys/fs/cgroup/cpu,cpuacct/cpu.shares r,
   /sys/fs/cgroup/memory/system.slice/freenet.service/memory.limit_in_bytes r,
   /sys/fs/cgroup/memory/system.slice/freenet.service/memory.use_hierarchy r,
+  /sys/fs/cgroup/memory/system.slice/freenet.service/memory.stat r,
 
   /{,usr/}bin/java mrix,
   /usr/bin/bash ix,

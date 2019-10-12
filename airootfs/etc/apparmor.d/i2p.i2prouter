@@ -16,6 +16,7 @@
   /sys/fs/cgroup/memory/system.slice/i2p.service/memory.soft_limit_in_bytes r,
   /sys/fs/cgroup/memory/system.slice/i2p.service/memory.usage_in_bytes r,
   /sys/fs/cgroup/memory/system.slice/i2p.service/memory.use_hierarchy r,
+  /sys/fs/cgroup/memory/system.slice/i2p.service/memory.stat r,
 
   /dev/tty rw,
   /etc/host.conf r,
