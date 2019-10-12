@@ -347,6 +347,7 @@ sed -i 's/\/usr\/lib\/thunderbird\/thunderbird/thunderbird/g' /usr/share/applica
 # Required for evince sandbox.
 mkdir -m 700 /home/user/i2p-browser/Browser/Downloads /home/user/freenet-browser/Browser/Downloads /home/user/zeronet-browser/Browser/Downloads /home/user/tor-browser_en-US/Browser/Downloads /home/user/Downloads
 chown user:user /home/user/*-browser*/Browser/Downloads
+chown user:user /home/user/Downloads
 
 # Generate seccomp filters.
 for i in default-seccomp tbb-seccomp evince-seccomp eog-seccomp
