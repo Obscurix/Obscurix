@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
     ALLOW_RULE (fgetxattr);
     ALLOW_RULE (fsetxattr);
     
-    filter_fd = open("/usr/local/share/seccomp/tor-browser/tbb_seccomp.bpf", O_CREAT | O_WRONLY, 0644);
+    filter_fd = open("/usr/local/share/seccomp/tbb_seccomp.bpf", O_CREAT | O_WRONLY, 0644);
     if (filter_fd == -1) {
         rc = -errno;
         goto out;
@@ -199,4 +199,3 @@ int main(int argc, char *argv[])
     seccomp_release(ctx);
     return -rc;
 }
-
