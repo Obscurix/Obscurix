@@ -42,7 +42,19 @@ bwrap \
 --proc /proc \
 /usr/bin/xpra start ${@} --no-daemon --html=off ${xpra_args} &
 
-# Wait until the xpra server has started.
-sleep 5
-
-xpra attach ${@} ${xpra_args} &
+# Only try connecting if the server has started.
+# If the client tries to connect to the server
+# before it has already started, it will fail
+# and won't retry. This only retries 10 times.
+for i in {1..10}
+  if xpra info ${@} &>/dev/null; then
+    xpra attach ${@} ${xpra_args} &
+    break
+  elif [ "${i}" = "10" ]; then
+    echo "ERROR: Could not connect to the xpra server."
+    exit 1
+  else
+    # So all 10 tries don't instantly get exhausted.
+    sleep 1
+  fi 
+done
