@@ -5,17 +5,43 @@ if [[ "${@}" = "" ]]; then
   exit 1
 fi
 
-xpra_args="--pulseaudio=no \
+## Description of flags:
+#
+# --daemon=no | Stops xpra from running in the background as a daemon.
+# --pulseaudio=no | Pulseaudio is unneeded and just extra attack surface.
+# --mdns=no | mDNS can leak a lot of important info to the local network.
+# --html=off | A webserver is not needed for an X11 server.
+# --printing=no | Printing is unneded and just adds attack surface.
+# --title=@title@ | Keeps the window title as normal.
+# --notifications=no | Disables xpra notifications as they can just be confusing.
+# --cursors=yes | Forwards custom mouse cursors.
+# --webcam=no | Disables the webcam.
+# --microphone=off | Disables the microphone.
+# --sharing=no | Allow only one client to connect to the xpra server.
+# --global-menus=yes | Forward application menus.
+# --tray=no | Disable the xpra tray as it might be confusing.
+
+# Server-only arguments.
+xpra_server_args="--daemon=no \
+--pulseaudio=no \
 --mdns=no \
+--html=off \
+--printing=no
+"
+
+# Client-only arguments.
+xpra_client_args="--title=@title@
+"
+
+# Server and client arguments.
+xpra_shared_args="--notifications=no \
+--cursors=yes \
 --webcam=no \
 --microphone=off \
---printing=no \
 --sharing=no \
---tray=no \
---title=@title@ \
---cursors=yes \
 --global-menus=yes \
---notifications=no"
+--tray=no
+"
 
 bwrap \
 --bind /home/user /home/user \
@@ -41,7 +67,7 @@ bwrap \
 --tmpfs /tmp \
 --dev /dev \
 --proc /proc \
-/usr/bin/xpra start ${@} --no-daemon --html=off ${xpra_args} &
+/usr/bin/xpra start ${@} ${xpra_server_args} ${xpra_shared_args} &
 
 # Only try connecting if the server has started.
 # If the client tries to connect to the server
@@ -50,7 +76,7 @@ bwrap \
 for i in {1..10}
 do
   if xpra info ${@} &>/dev/null; then
-    xpra attach ${@} ${xpra_args} &
+    xpra attach ${@} ${xpra_client_args} ${xpra_shared_args} &
     break
   elif [ "${i}" = "10" ]; then
     echo "ERROR: Could not connect to the xpra server."
