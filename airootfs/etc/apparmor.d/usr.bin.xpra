@@ -6,7 +6,6 @@
   #include <abstractions/base>
   #include <abstractions/bash>
   #include <abstractions/gnome>
-  #include <abstractions/nameservice>
   #include <abstractions/opencl-pocl>
   #include <abstractions/python>
   #include <abstractions/user-tmp>
@@ -17,6 +16,16 @@
   signal send set=term peer=/usr/bin/xpra//null-/usr/bin/xpra_Xdummy//null-/usr/lib/Xorg,
 
   ptrace read peer=unconfined,
+
+  deny @{PROC}/sys/net/** r,
+  deny /etc/nsswitch.conf r,
+  deny /etc/passwd r,
+  deny /etc/group r,
+  deny /etc/host.conf r,
+  deny /etc/resolv.conf r,
+  deny /etc/hosts r,
+  deny /etc/gai.conf r,
+  deny network,
 
   deny /usr/bin/torbrowser rx,
 
@@ -99,6 +108,5 @@
   @{PROC}/cmdline r,
   @{PROC}/cpuinfo r,
   @{PROC}/loadavg r,
-  @{PROC}/sys/net/** r,
   @{PROC}/1/cmdline r,
 }
