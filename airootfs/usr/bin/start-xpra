@@ -21,6 +21,7 @@ fi
 # --sharing=no | Allow only one client to connect to the xpra server.
 # --global-menus=yes | Forward application menus.
 # --tray=no | Disable the xpra tray as it might be confusing.
+# --ssh= --ssh-upgrade=false | Disables SSH and TCP socket upgrades.
 
 # Server-only arguments.
 xpra_server_args="--daemon=no \
@@ -44,7 +45,9 @@ xpra_shared_args="--notifications=no \
 --microphone=off \
 --sharing=no \
 --global-menus=yes \
---tray=no
+--tray=no \
+--ssh= \
+--ssh-upgrade=false
 "
 
 bwrap \
