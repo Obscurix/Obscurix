@@ -285,7 +285,7 @@ systemctl enable auditd.service
 sh /root/install-zeronet.sh
 
 # Install MAT2.
-# sh /root/install-mat2.sh
+sh /root/install-mat2.sh
 
 # Install hardened_malloc.
 sh /root/install-hardened-malloc.sh
