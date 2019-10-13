@@ -11,7 +11,7 @@ fi
 # --pulseaudio=no | Pulseaudio is unneeded and just extra attack surface.
 # --mdns=no | mDNS can leak a lot of important info to the local network.
 # --html=off | A webserver is not needed for an X11 server.
-# --printing=no | Printing is unneded and just adds attack surface.
+# --printing=no --lpadmin= --lpinfo= | Printing is unneded and just adds attack surface.
 # --dbus-launch= --dbus-proxy=no --dbus-control=no | Disables xpra's dbus server as it's unneeded, causes errors and adds attack surface.
 # --title=@title@ | Keeps the window title as normal.
 # --notifications=no | Disables xpra notifications as they can just be confusing.
@@ -22,16 +22,24 @@ fi
 # --global-menus=yes | Forward application menus.
 # --tray=no | Disable the xpra tray as it might be confusing.
 # --ssh= --ssh-upgrade=false | Disables SSH and TCP socket upgrades.
+# --open-command= --open-files=no --open-urls=no | Bubblewrap/AppArmor breaks opening files anyway.
+# --file-transfer=no | Disable file transfers.
+# --pings=no | Disable pings.
 
 # Server-only arguments.
 xpra_server_args="--daemon=no \
 --pulseaudio=no \
+--pulseaudio-command= \
+--pulseaudio-configure-commands= \
 --mdns=no \
 --html=off \
 --printing=no \
+--lpadmin= \
+--lpinfo= \
 --dbus-launch= \
 --dbus-proxy=no \
---dbus-control=no
+--dbus-control=no \
+--file-transfer=no
 "
 
 # Client-only arguments.
@@ -47,7 +55,11 @@ xpra_shared_args="--notifications=no \
 --global-menus=yes \
 --tray=no \
 --ssh= \
---ssh-upgrade=false
+--ssh-upgrade=false \
+--open-command= \
+--open-files=no \
+--open-urls=no \
+--pings=no
 "
 
 bwrap \
