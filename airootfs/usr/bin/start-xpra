@@ -12,6 +12,7 @@ fi
 # --mdns=no | mDNS can leak a lot of important info to the local network.
 # --html=off | A webserver is not needed for an X11 server.
 # --printing=no | Printing is unneded and just adds attack surface.
+# --dbus-launch= --dbus-proxy=no --dbus-control=no | Disables xpra's dbus server as it's unneeded, causes errors and adds attack surface.
 # --title=@title@ | Keeps the window title as normal.
 # --notifications=no | Disables xpra notifications as they can just be confusing.
 # --cursors=yes | Forwards custom mouse cursors.
@@ -26,7 +27,10 @@ xpra_server_args="--daemon=no \
 --pulseaudio=no \
 --mdns=no \
 --html=off \
---printing=no
+--printing=no \
+--dbus-launch= \
+--dbus-proxy=no \
+--dbus-control=no
 "
 
 # Client-only arguments.
