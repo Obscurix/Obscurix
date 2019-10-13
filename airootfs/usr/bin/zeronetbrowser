@@ -51,4 +51,4 @@ bwrap \
 10< /usr/local/share/seccomp/tbb_seccomp.bpf \
 /home/user/zeronet-browser/Browser/start-tor-browser
 
-xpra_display
+xpra stop ${xpra_display}

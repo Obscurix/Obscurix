@@ -7,7 +7,7 @@ mat_dir="/usr/src/mat2"
 git clone https://0xacab.org/jvoisin/mat2 ${mat_dir}
 
 # Verify MAT2.
-cd ${mat2_dir}
+cd ${mat_dir}
 
 gpg --recv-keys 9FCDEE9E1A381F311EA62A7404D041E8171901CC
 
