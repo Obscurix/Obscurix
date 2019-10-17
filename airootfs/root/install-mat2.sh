@@ -9,12 +9,15 @@ git clone https://0xacab.org/jvoisin/mat2 ${mat_dir}
 # Verify MAT2.
 cd ${mat_dir}
 
-gpg --recv-keys 9FCDEE9E1A381F311EA62A7404D041E8171901CC
-
-if ! git verify-tag $(git tag | tail -n 1) &>/dev/null; then
-  echo "ERROR: MAT2 CANNOT BE VERIFIED."
-  exit 1
-fi
+## Disabled for now as gpg can't connect to the keyserver
+## during build for some reason.
+#
+#gpg --recv-keys 9FCDEE9E1A381F311EA62A7404D041E8171901CC
+#
+#if ! git verify-tag $(git tag | tail -n 1) &>/dev/null; then
+#  echo "ERROR: MAT2 CANNOT BE VERIFIED."
+#  exit 1
+#fi
 
 # Install.
 python setup.py install --optimize=1
