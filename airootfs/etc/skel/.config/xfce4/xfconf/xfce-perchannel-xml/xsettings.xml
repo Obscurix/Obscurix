@@ -9,5 +9,5 @@
   <property name="Gtk" type="empty">
     <property name="FontName" type="string" value="Source Code Pro 10"/>
     <property name="MonospaceFontName" type="string" value="Source Code Pro 10"/>
-  </property
+  </property>
 </channel>
