@@ -31,6 +31,9 @@ allow_root() {
 
   # Set the user password.
   echo "user:password" | chpasswd
+
+  # Enable auditd for AppArmor profile generation.
+  systemctl enable auditd.service
 }
 
 disable_macspoofing() {

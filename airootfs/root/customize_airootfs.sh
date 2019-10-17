@@ -277,10 +277,6 @@ chmod +x /home/user/Desktop/*.desktop
 # This is needed as unprivileged userns are disabled for security.
 chmod u+s /usr/bin/bwrap
 
-# Enable auditd service. Needed for creating AppArmor profiles.
-# Will be later removed.
-systemctl enable auditd.service
-
 # Install Zeronet.
 sh /root/install-zeronet.sh
 
