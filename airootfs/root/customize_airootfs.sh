@@ -354,3 +354,15 @@ do
 done
 
 chmod 644 /usr/local/share/seccomp/*
+
+# Files in /etc/skel don't need to be in every
+# home directory.
+for skel_file in $(find /etc/skel -maxdepth 1 -mindepth 1 | sed -e 's/\/etc\/skel\///g')
+do
+  for home_dir in /home/i2p /home/freenet /root /var/lib/zeronet
+  do
+    if [ -e "${home_dir}/${skel_file}" ]; then
+      rm -rf "${home_dir}/{skel_file}"
+    fi
+  done
+done
