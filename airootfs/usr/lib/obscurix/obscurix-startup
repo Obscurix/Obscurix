@@ -106,10 +106,14 @@ update_check() {
   new_ver="$(scurl -s https://obscurix.github.io/update_check.txt)"
   current_ver="0.2"
 
-  if ! [ "${new_ver}" = "${current_ver}" ]; then
-    zenity --info --no-wrap --text="A new update is available. Please update to the latest version."
+  if ! scurl -s https://obscurix.github.io/update_check.txt; then
+    zenity --error --no-wrap --text="ERROR: Could not connect to https://obscurix.github.io to check for an update."
   else
-    zenity --info --no-wrap --text="Everything is up to date!"
+    if ! [ "${new_ver}" = "${current_ver}" ]; then
+      zenity --info --no-wrap --text="A new update is available. Please update to the latest version."
+    else
+      zenity --info --no-wrap --text="Everything is up to date!"
+    fi
   fi
 }
 
