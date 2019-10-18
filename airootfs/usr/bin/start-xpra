@@ -22,7 +22,7 @@ fi
 # --global-menus=yes | Forward application menus.
 # --tray=no | Disable the xpra tray as it might be confusing.
 # --ssh= --ssh-upgrade=false | Disables SSH and TCP socket upgrades.
-# --open-command= --open-files=no --open-urls=no | Bubblewrap/AppArmor breaks opening files anyway.
+# --open-command= --open-files=no | Bubblewrap/AppArmor breaks opening files anyway.
 # --file-transfer=no | Disable file transfers.
 # --pings=no | Disable pings.
 
@@ -58,7 +58,6 @@ xpra_shared_args="--notifications=no \
 --ssh-upgrade=false \
 --open-command= \
 --open-files=no \
---open-urls=no \
 --pings=no
 "
 
