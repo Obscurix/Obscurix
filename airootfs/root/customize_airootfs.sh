@@ -326,12 +326,13 @@ chown cjdns:cjdns /usr/bin/cjdroute /etc/cjdroute.conf
 echo "interval=0" | tee -a /usr/lib/NetworkManager/conf.d/20-connectivity.conf >/dev/null
 
 # Remove the setuid/setgid bit of unneeded binaries.
-for i in chage chsh chfn expiry ksu newgrp sg pkexec ../lib/Xorg.wrap
+# If they need to be used, they can be run as root.
+for i in chage chsh chfn expiry ksu newgrp sg pkexec fusermount gpasswd mount passwd umount unix_chkpwd ../lib/Xorg.wrap
 do
   chmod u-s "/usr/bin/${i}"
 done
 
-for i in wall write
+for i in wall write unix_chkpwd
 do
   chmod g-s "/usr/bin/${i}"
 done
