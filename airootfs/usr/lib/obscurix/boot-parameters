@@ -77,10 +77,16 @@ disable_zeronet() {
 
 disable_i2p() {
   systemctl mask --now i2p.service
+
+  iptables -t nat -D OUTPUT -m owner --uid-owner "i2p" -j RETURN
+  iptables -D OUTPUT -m owner --uid-owner "i2p" -j ACCEPT
 }
 
 disable_freenet() {
   systemctl mask --now freenet.service
+
+  iptables -t nat -D OUTPUT -m owner --uid-owner "freenet" -j RETURN
+  iptables -D OUTPUT -m owner --uid-owner "freenet" -j ACCEPT
 }
 
 if grep "notor" /proc/cmdline; then
