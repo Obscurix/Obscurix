@@ -25,6 +25,7 @@ fi
 # --open-command= --open-files=no | Bubblewrap/AppArmor breaks opening files anyway.
 # --file-transfer=no | Disable file transfers.
 # --pings=no | Disable pings.
+# --xsettings=yes | Sync xsettings.
 
 # Server-only arguments.
 xpra_server_args="--daemon=no \
@@ -58,7 +59,8 @@ xpra_shared_args="--notifications=no \
 --ssh-upgrade=false \
 --open-command= \
 --open-files=no \
---pings=no
+--pings=no \
+--xsettings=yes
 "
 
 bwrap \
