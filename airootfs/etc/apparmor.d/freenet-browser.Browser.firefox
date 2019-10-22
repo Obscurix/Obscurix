@@ -6,6 +6,7 @@
 
   capability sys_admin,
   capability sys_chroot,
+  capability sys_ptrace,
 
   deny /dev/dri/ rwlkx,
   deny /dev/dri/** rwlkx,
@@ -58,6 +59,7 @@
 
   owner /{dev,run}/shm/org.chromium.* rw,
   owner /{dev,run}/shm/shmfd-* rw,
+  owner /dev/shm/org.mozilla.ipc.* rw,
 
   owner @{freenetbrowser_home_dir}.bak/ rwk,
   owner @{freenetbrowser_home_dir}.bak/** rwk,

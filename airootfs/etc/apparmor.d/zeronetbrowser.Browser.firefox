@@ -6,10 +6,10 @@
 
   capability sys_admin,
   capability sys_chroot,
+  capability sys_ptrace,
 
-  deny capability sys_ptrace,
-  deny /etc/fstab r,
-  deny /run/user/1000/dconf/user rw,
+  /etc/fstab r,
+  /run/user/1000/dconf/user rw,
 
   # Downloads.
   owner @{zeronetbrowser_home_dir}/Downloads rw,
@@ -68,6 +68,7 @@
 
   owner /{dev,run}/shm/org.chromium.* rw,
   owner /{dev,run}/shm/shmfd-* rw,
+  owner /dev/shm/org.mozilla.ipc.* rw,
 
   owner @{zeronetbrowser_home_dir}.bak/ rwk,
   owner @{zeronetbrowser_home_dir}.bak/** rwk,

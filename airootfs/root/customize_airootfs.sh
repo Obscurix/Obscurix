@@ -97,9 +97,6 @@ user_pref("network.proxy.no_proxies_on", "127.0.0.1");
 user_pref("browser.startup.homepage", "127.0.0.1:8888");
 EOF
 
-# Remove the TorButton extensions from Freenet and I2P browsers. This is needed to prevent the Tor proxy settings from reverting.
-rm "/home/user/i2p-browser/Browser/TorBrowser/Data/Browser/profile.default/extensions/torbutton@torproject.org.xpi" "/home/user/freenet-browser/Browser/TorBrowser/Data/Browser/profile.default/extensions/torbutton@torproject.org.xpi"
-
 # Set browser permissions.
 chown user -R /home/user/i2p-browser /home/user/freenet-browser
 
