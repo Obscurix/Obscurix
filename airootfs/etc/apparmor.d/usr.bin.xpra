@@ -116,7 +116,7 @@
   owner @{HOME}/.config/xpra/** rw,
 
   owner @{HOME}/.cache/gstreamer-1.0/ w,
-  owner @{HOME}/.cache/gstreamer-1.0/** w,
+  owner @{HOME}/.cache/gstreamer-1.0/** rw,
 
   owner @{HOME}/.icons/** r,
   owner @{HOME}/tor-browser_en-US/Browser/browser/chrome/icons/default/default128.png r,
