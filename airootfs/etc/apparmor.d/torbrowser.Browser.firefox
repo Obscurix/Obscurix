@@ -9,6 +9,7 @@
   capability sys_ptrace,
 
   /etc/fstab r,
+  /run/user/1000/dconf/ rw,
   /run/user/1000/dconf/user rw,
 
   # Downloads.

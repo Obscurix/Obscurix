@@ -30,6 +30,9 @@
   deny /usr/bin/torbrowser rx,
 
   /persistent_ARCH_*/x86_64/upperdir/etc/ r,
+  /persistent_ARCH_*/x86_64/upperdir/usr/lib/ r,
+  /persistent_ARCH_*/x86_64/upperdir/usr/lib/python3.8/ r,
+  /persistent_ARCH_*/x86_64/upperdir/usr/lib/python3.8/site-packages/ r,
 
   /dev/dri/* rw,
   /dev/tty rw,
@@ -38,6 +41,8 @@
   /etc/dbus-1/session.conf r,
   /etc/machine-id r,
   /etc/xpra/** r,
+  /etc/xdg/menus/xfce-applications.menu r,
+  owner /etc/ld.so.cache~ w,
 
   /run/udev/data/* r,
 
@@ -49,6 +54,7 @@
   /sys/class/tty/ r,
   /sys/devices/** r,
 
+  /usr/bin/ r,
   /usr/bin/bash mrix,
   /usr/bin/dbus-daemon mrix,
   /usr/bin/dbus-launch mrix,
@@ -58,14 +64,18 @@
   /usr/bin/ldconfig mrix,
   /usr/bin/pactl mrix,
   /usr/bin/python2.7 rix,
+  /usr/bin/python3.8 mrix,
   /usr/bin/uname mrix,
   /usr/bin/xauth mrix,
   /usr/bin/xkbcomp mrix,
   /usr/bin/xpra r,
   /usr/bin/xpra_Xdummy mrix,
+  /usr/bin/xpra_signal_listener mrix,
+  /usr/lib/ r,
   /usr/lib/Xorg mrix,
   /usr/lib/gcc/x86_64-pc-linux-gnu/9.2.0/collect2 mrix,
   /usr/lib{,32,64}/python{2.[4-7],3.[0-9]}/**.{pyc,so} mrw,
+  /usr/lib/gstreamer-1.0/gst-plugin-scanner mrix,
 
   /usr/share/dbus-1/services/ r,
   /usr/share/dbus-1/services/*.service r,
@@ -81,6 +91,8 @@
   /usr/share/pixmaps/ r,
   /usr/share/themes/** r,
   /usr/share/xpra/** r,
+  /usr/share/gtk-3.0/settings.ini r,
+  /usr/share/desktop-directories/xfce-*.directory r,
 
   owner /run/user/1000/dbus-1/services/ r,
   owner /run/user/1000/xpra/ rw,
@@ -100,10 +112,19 @@
 
   owner @{HOME}/.xpra/ rw,
   owner @{HOME}/.xpra/** rw,
+  owner @{HOME}/.config/xpra/ rw,
+  owner @{HOME}/.config/xpra/** rw,
+
+  owner @{HOME}/.cache/gstreamer-1.0/ w,
+  owner @{HOME}/.cache/gstreamer-1.0/** w,
+
+  owner @{HOME}/.icons/** r,
+  owner @{HOME}/tor-browser_en-US/Browser/browser/chrome/icons/default/default128.png r,
 
   owner @{PROC}/@{pid}/cmdline r,
   owner @{PROC}/@{pid}/mounts r,
   owner @{PROC}/@{pid}/mountinfo r,
+  owner @{PROC}/*/fd/ r,
   @{PROC}/cmdline r,
   @{PROC}/cpuinfo r,
   @{PROC}/loadavg r,
