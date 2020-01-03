@@ -104,7 +104,7 @@ setup_audio() {
 update_check() {
   # Check for an update.
   new_ver="$(scurl -s https://obscurix.github.io/update_check.txt)"
-  current_ver="0.2"
+  current_ver="0.3.1"
 
   if ! scurl -s https://obscurix.github.io/update_check.txt; then
     zenity --error --no-wrap --text="ERROR: Could not connect to https://obscurix.github.io to check for an update."
