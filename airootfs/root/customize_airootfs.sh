@@ -322,7 +322,7 @@ echo "interval=0" | tee -a /usr/lib/NetworkManager/conf.d/20-connectivity.conf >
 # If they need to be used, they can be run as root.
 chmod u-s -R /usr/bin/ /usr/lib/
 chmod g-s -R /usr/bin/ /usr/lib/
-chmod u+s /usr/bin/bwrap /usr/lib/dbus-1.0/dbus-daemon-launcher /usr/lib/polkit-1/polkit-agent-helper-1 /usr/lib/xf86-video-intel-backlight-helper
+chmod u+s /usr/bin/bwrap /usr/lib/dbus-1.0/dbus-daemon-launch-helper /usr/lib/polkit-1/polkit-agent-helper-1 /usr/lib/xf86-video-intel-backlight-helper
 
 # Remove capabilities from unneeded binaries.
 for i in /usr/bin/*
