@@ -280,10 +280,6 @@ chmod 755 /usr/bin/swapon
 # Make desktop files executable.
 chmod +x /home/user/Desktop/*.desktop
 
-# Make bubblewrap setuid.
-# This is needed as unprivileged userns are disabled for security.
-chmod u+s /usr/bin/bwrap
-
 # Install Zeronet.
 sh /root/install-zeronet.sh
 
@@ -324,21 +320,19 @@ echo "interval=0" | tee -a /usr/lib/NetworkManager/conf.d/20-connectivity.conf >
 
 # Remove the setuid/setgid bit of unneeded binaries.
 # If they need to be used, they can be run as root.
-for i in chage chsh chfn expiry ksu newgrp sg pkexec fusermount gpasswd mount passwd umount unix_chkpwd ../lib/Xorg.wrap
-do
-  chmod u-s "/usr/bin/${i}"
-done
-
-for i in wall write unix_chkpwd
-do
-  chmod g-s "/usr/bin/${i}"
-done
+chmod u-s -R /usr/bin/ /usr/lib/
+chmod g-s -R /usr/bin/ /usr/lib/
+chmod u+s /usr/bin/bwrap /usr/lib/dbus-1.0/dbus-daemon-launcher /usr/lib/polkit-1/polkit-agent-helper-1 /usr/lib/xf86-video-intel-backlight-helper
 
 # Remove capabilities from unneeded binaries.
-for i in ping rsh rlogin rcp
+for i in /usr/bin/*
 do
-  setcap -r "/usr/bin/${i}"
+  setcap -r "${i}"
 done
+
+setcap cap_setgid+ep /usr/bin/newgidmap
+setcap cap_setuid+ep /usr/bin/newuidmap
+setcap cap_new_bind_service,cap_net_admin+ep /usr/lib/gstreamer-1.0/gst-ptp-helper
 
 # Starting VLC from the applications menu will make it run
 # /usr/bin/vlc but we want it to run the first in $PATH

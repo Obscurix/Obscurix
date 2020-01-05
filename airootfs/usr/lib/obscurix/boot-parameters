@@ -29,6 +29,9 @@ allow_root() {
   # Allow users of the wheel group to use sudo.
   sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 
+  # Make su/sudo suid again.
+  chmod u+s /usr/bin/su /usr/bin/sudo
+
   # Set the user password.
   echo "user:password" | chpasswd
 
