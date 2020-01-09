@@ -320,14 +320,14 @@ echo "interval=0" | tee -a /usr/lib/NetworkManager/conf.d/20-connectivity.conf >
 
 # Remove the setuid/setgid bit of unneeded binaries.
 # If they need to be used, they can be run as root.
-chmod u-s -R /usr/bin/ /usr/lib/
-chmod g-s -R /usr/bin/ /usr/lib/
+find / -perm /4000 -user root -exec chmod u-s {} \;
+find / -perm /2000 -group root -exec chmod g-s {} \;
 chmod u+s /usr/bin/bwrap /usr/lib/dbus-1.0/dbus-daemon-launch-helper /usr/lib/polkit-1/polkit-agent-helper-1 /usr/lib/xf86-video-intel-backlight-helper
 
 # Remove capabilities from unneeded binaries.
-for i in /usr/bin/*
+for i in $(getcap -r / 2>/dev/null | awk '{print $1}')
 do
-  setcap -r "${i}"
+  setcap -r "${i}" || true
 done
 
 setcap cap_setgid+ep /usr/bin/newgidmap
