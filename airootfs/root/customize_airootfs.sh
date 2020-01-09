@@ -332,7 +332,7 @@ done
 
 setcap cap_setgid+ep /usr/bin/newgidmap
 setcap cap_setuid+ep /usr/bin/newuidmap
-setcap cap_new_bind_service,cap_net_admin+ep /usr/lib/gstreamer-1.0/gst-ptp-helper
+setcap cap_net_bind_service,cap_net_admin+ep /usr/lib/gstreamer-1.0/gst-ptp-helper
 
 # Starting VLC from the applications menu will make it run
 # /usr/bin/vlc but we want it to run the first in $PATH
