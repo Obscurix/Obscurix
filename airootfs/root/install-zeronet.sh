@@ -15,14 +15,6 @@ mkdir -pm 755 /opt/zeronet
 # Copy needed files.
 cp -a "${zeronet_dir}/." "/opt/zeronet/"
 
-scurl-download https://aur.archlinux.org/cgit/aur.git/plain/zeronet.conf?h=zeronet -o /etc/zeronet.conf
-chmod 644 /etc/zeronet.conf
-
-# Configure Zeronet to use Tor. Will give us stream isolation.
-echo "tor = always" | tee -a /etc/zeronet.conf >/dev/null
-sed -i 's/9051/9151/' /etc/zeronet.conf
-sed -i 's/9050/9070/' /etc/zeronet.conf
-
 # Create Zeronet user.
 useradd --system --user-group -m --home /var/lib/zeronet zeronet
 usermod -a -G tor zeronet
@@ -33,6 +25,7 @@ chown zeronet:zeronet /var/log/zeronet
 
 # Fix permissions.
 chown zeronet:zeronet /etc/zeronet.conf
+chmod 644 /etc/zeronet.conf
 chown -R zeronet:zeronet /opt/zeronet
 
 # Create Zeronet browser.
