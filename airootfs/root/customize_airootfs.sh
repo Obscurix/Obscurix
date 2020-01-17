@@ -108,7 +108,7 @@ useradd -m i2p
 
 # Download I2P.
 i2p_ver="0.9.44"
-i2p_sha256="cb192e48c5f06839c99b71861364f3a9117b6b24f78f7f7c25d6716507c81bdf"
+i2p_sha256="265729c1d676939bc81f96689b72c5f413083f4bbd849393f7629db05523d238"
 
 scurl-download https://download.i2p2.de/releases/${i2p_ver}/i2pinstall_${i2p_ver}.jar -o /home/i2p/i2pinstall.jar
 scurl-download https://download.i2p2.de/releases/${i2p_ver}/i2pinstall_${i2p_ver}.jar.sig -o /home/i2p/i2pinstall.jar.sig
