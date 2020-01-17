@@ -31,8 +31,8 @@ useradd -m -s /bin/bash user
 echo "user:password" | chpasswd
 
 # Fix permissions.
-chmod 755 /etc/ /etc/profile.d/ /etc/iptables/ /etc/apparmor.d/ /etc/apparmor.d/abstractions/ /home/user/.config/ /home/user/.config/xfce4/ /home/user/.config/xfce4/xfconf/ /usr/ /usr/bin/ /usr/bin/torbrowser /usr/lib /etc/NetworkManager /etc/NetworkManager/conf.d /etc/pam.d /usr/lib/obscurix/ /usr/share/ /usr/share/backgrounds/ /usr/share/backgrounds/xfce/ /usr/bin/i2pbrowser /usr/bin/freenet-browser /usr/local/ /usr/local/bin/ /usr/local/bin/* /usr/bin/sandbox /lib/systemd /lib/systemd/system /usr/bin/zeronetbrowser /etc/onion-grater.d /usr/local/share /usr/local/share/seccomp /usr/local/share/seccomp/* /usr/bin/start-xpra
-chmod 644 /etc/fstab /etc/bash.bashrc /etc/profile.d/umask.sh /etc/modprobe.d/*.conf /etc/iptables/iptables.rules /etc/apparmor.d/torbrowser.Browser.firefox /etc/apparmor.d/usr.bin.tor /etc/apparmor.d/tunables/torbrowser /etc/environment /home/user/.config/xfce4/xfconf/xfce-perchannel-xml/*.xml /etc/dnsmasq.conf /etc/NetworkManager/conf.d/dns.conf /etc/pam.d/su /etc/pam.d/su-l /etc/pam.d/system-login /usr/share/backgrounds/xfce/background.png /home/user/.bash_profile /etc/onion-grater.d/*.yml /etc/systemd/system/NetworkManager.service.d/fail-closed.conf /etc/systemd/system/tor.service.d/sandbox.conf  /etc/systemd/system/haveged.service.d/apparmor.conf /etc/systemd/system/cjdns.service.d/sandbox.conf
+chmod 755 /etc/ /etc/profile.d/ /etc/iptables/ /etc/apparmor.d/ /etc/apparmor.d/abstractions/ /home/user/.config/ /home/user/.config/xfce4/ /home/user/.config/xfce4/xfconf/ /usr/ /usr/bin/ /usr/bin/torbrowser /usr/lib /etc/NetworkManager /etc/NetworkManager/conf.d /etc/pam.d /usr/lib/obscurix/ /usr/share/ /usr/share/backgrounds/ /usr/share/backgrounds/xfce/ /usr/bin/i2pbrowser /usr/bin/freenet-browser /usr/local/ /usr/local/bin/ /usr/local/bin/* /usr/bin/sandbox /lib/systemd /lib/systemd/system /usr/bin/zeronetbrowser /etc/onion-grater.d /usr/local/share /usr/local/share/seccomp /usr/local/share/seccomp/* /usr/bin/start-xpra /etc/tor/
+chmod 644 /etc/fstab /etc/bash.bashrc /etc/profile.d/umask.sh /etc/modprobe.d/*.conf /etc/iptables/iptables.rules /etc/apparmor.d/torbrowser.Browser.firefox /etc/apparmor.d/usr.bin.tor /etc/apparmor.d/tunables/torbrowser /etc/environment /home/user/.config/xfce4/xfconf/xfce-perchannel-xml/*.xml /etc/dnsmasq.conf /etc/NetworkManager/conf.d/dns.conf /etc/pam.d/su /etc/pam.d/su-l /etc/pam.d/system-login /usr/share/backgrounds/xfce/background.png /home/user/.bash_profile /etc/onion-grater.d/*.yml /etc/systemd/system/NetworkManager.service.d/fail-closed.conf /etc/systemd/system/tor.service.d/sandbox.conf  /etc/systemd/system/haveged.service.d/apparmor.conf /etc/systemd/system/cjdns.service.d/sandbox.conf /etc/tor/torrc
 chmod 700 /home/user/.config/xfce4/xfconf/xfce-perchannel-xml/ /home/user/.config/autostart /home/user/.config/autostart/obscurix-startup.desktop /usr/lib/obscurix/* /home/user/.config/hexchat /home/user/.config/vlc /home/user/.config/xfce4/terminal /home/user/.bash_profile /home/user/.config/xfce4/desktop /home/user/.thunderbird/ /home/user/.thunderbird/profile.default/ /home/user/.gnupg /lib/modules/
 chmod 600 /home/user/.config/hexchat/*.conf /home/user/.config/vlc/vlcrc /home/user/.config/xfce4/terminal/terminalrc /home/user/.config/xfce4/desktop/icons.screen.latest.rc /home/user/.thunderbird/profile.default/user.js /home/user/.gnupg/gpg.conf
 chmod 440 /etc/sudoers /etc/sudoers.d/*
@@ -216,51 +216,6 @@ systemctl mask systemd-timesyncd.service
 
 # Disable coredumps.
 echo "* hard core 0" | tee -a /etc/security/limits.conf >/dev/null
-
-# Configure torrc.
-echo "
-# Transparent proxy.
-TransPort 9040
-
-# DNS.
-DNSPort 5353
-AutomapHostsOnResolve 1
-AutomapHostsSuffixes .exit,.onion
-
-# Tor Browser SocksPort.
-SocksPort 9150 IsolateSOCKSAuth KeepAliveIsolateSOCKSAuth
-
-# Pacman SocksPort.
-SocksPort 9060
-
-# ZeroNet SocksPort.
-SocksPort 9070
-
-# Generic SocksPort.
-SocksPort 9050 IsolateDestAddr IsolateDestPort
-
-# I2P installation.
-SocksPort 9043
-
-# Freenet installation.
-SocksPort 9062
-
-# Time sync.
-SocksPort 9058 IsolateDestAddr IsolateDestPort
-
-# GnuPG.
-SocksPort 9042 IsolateDestAddr IsolateDestPort
-
-# Use less disk writes.
-AvoidDiskWrites 1
-
-# Tor Control Port.
-ControlPort 9152
-
-# onion-grater changes.
-ControlSocket /run/tor/control
-CookieAuthentication 1
-CookieAuthFile /run/tor/control.authcookie" | tee -a /etc/tor/torrc >/dev/null
 
 # Enable systemd services.
 systemctl enable iptables.service block-wireless.service macspoof.service NetworkManager.service dnsmasq.service check-boot-parameters.service apparmor.service secure-time-sync.service onion-grater.service i2p.service freenet.service
