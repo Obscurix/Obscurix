@@ -23,7 +23,7 @@ RestrictRealtime=true
 SystemCallArchitectures=native
 RestrictNamespaces=true
 RestrictAddressFamilies=AF_UNIX AF_INET
-SystemCallFilter=wait4 poll read mmap openat mprotect close munmap stat fstat rt_sigaction connect write brk socket lseek rt_sigprocmask access recvmsg futex sendmsg pipe set_robust_list geteuid getegid getsockopt ioctl clone execve getuid arch_prctl getgid sendto set_tid_address clock_settime setsockopt uname fcntl prlimit64 getpid rt_sigreturn getrandom dup2 sysinfo madvise getsockname gettid getcwd getppid recvfrom getpgrp getpeername sigaltstack socketpair
+SystemCallFilter=wait4 poll read mmap openat mprotect close munmap stat fstat rt_sigaction connect write brk socket lseek rt_sigprocmask access recvmsg futex sendmsg pipe set_robust_list geteuid getegid getsockopt ioctl clone execve getuid arch_prctl getgid sendto set_tid_address clock_settime setsockopt uname fcntl prlimit64 getpid rt_sigreturn getrandom dup2 sysinfo madvise getsockname gettid getcwd getppid recvfrom getpgrp getpeername sigaltstack socketpair pread64
 AppArmorProfile=/etc/apparmor.d/usr.lib.obscurix.secure-time-sync
 
 [Install]
